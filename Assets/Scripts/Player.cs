@@ -60,7 +60,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = true;
+        // Cursor.lockState = CursorLockMode.Locked;
         speed = moveSpeed;
         normHeight = currHeight = controller.height;
         initCamPos = cameraTransform.localPosition;
@@ -124,7 +125,6 @@ public class Player : MonoBehaviour
             currHeight = Mathf.Lerp(currHeight, normHeight, crouchDelta);
             sliding = false;
             canSlide = false;
-            Debug.Log("Stop sliding");
             StartCoroutine(waitForKeyRelease());
 
         }
@@ -149,7 +149,6 @@ public class Player : MonoBehaviour
 
     void HandleSpeed()
     {
-        Debug.Log(canSlide);
         if(isCrouching && isSprinting && canSlide){
             if(!sliding){
                 slideTimer = slideLength;
