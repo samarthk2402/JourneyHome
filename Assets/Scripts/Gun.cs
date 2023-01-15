@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Gun : MonoBehaviour
 {
-    // public float damage = 10f;
+    public float damage = 10f;
     public float range = 100f;
     public float fireRate = 15f;
 
@@ -59,14 +59,22 @@ public class Gun : MonoBehaviour
         {
             Debug.Log(hit.transform.name);
 
-            // Target target = hit.transform.GetComponent<Target>();
-            // if (target != null)
-            // {
-            //     target.TakeDamage(damage);
-            // }
+            Target target = hit.transform.GetComponent<Target>();
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+            }
 
             // GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             // Destroy(impactGO, 2f);
         }
     }
+
+    // IEnumerator showDamage(float damage){
+    //     Instantiate(damageText, new Vector3(110, 0, 0), Quaternion.identity);
+    //     damageText.text = System.Convert.ToString(damage);
+    //     yield return new WaitForSeconds(0.5f);
+    //     DestroyImmediate(damageText, true);
+    // }
+
 }
