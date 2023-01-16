@@ -10,9 +10,11 @@ public class Target : MonoBehaviour
     private float currentHealth;
 
     public HealthBar healthBar;
+    public GameObject canvas;
 
     void Start()
     {
+        canvas.SetActive(false);
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
     }
@@ -20,11 +22,18 @@ public class Target : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        StartCoroutine(showHealth());
         if (currentHealth <= 0f)
         {
             Destroy(this.gameObject);
         }
         UpdateHealthBar();
+    }
+
+    IEnumerator showHealth(){
+        canvas.SetActive(true);
+        yield return new WaitForSeconds(1);
+        canvas.SetActive(false);
     }
 
     void UpdateHealthBar()
