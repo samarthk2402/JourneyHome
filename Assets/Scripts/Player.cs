@@ -32,8 +32,8 @@ public class Player : MonoBehaviour
     InputAction crouchAction;
 
 
-    CharacterController controller;
-    Vector3 velocity;
+    public CharacterController controller;
+    public Vector3 velocity;
     float speed;
     float deltaSpeed;
     float currHeight;
@@ -45,11 +45,17 @@ public class Player : MonoBehaviour
     bool sliding;
     int resetSlide;
     public bool canSlide = true;
-    public bool activeGrapple;
-    public bool freeze = false;
+    public State state;
+    private Grapple grapple;
+
+    public enum State{
+        Normal,
+        HookshotFlyingPlayer
+    }
 
     void Awake()
     {
+        grapple = GetComponent<Grapple>();
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["move"];
@@ -57,6 +63,7 @@ public class Player : MonoBehaviour
         jumpAction = playerInput.actions["jump"];
         sprintAction = playerInput.actions["sprint"];
         crouchAction = playerInput.actions["crouch"];
+        state = State.Normal;
     }
 
     // Start is called before the first frame update
@@ -72,18 +79,23 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(velocity);
-        controller.Move(velocity*Time.deltaTime);
-        if (freeze) {
-            velocity = Vector3.zero;
+        switch(state) {
+        default:
+        case State.Normal:
+            HandleLook();
+            HandleMove();
+            UpdateGravity();
+            HandleJump();
+            HandleSprint();
+            HandleCrouch();
+            HandleSpeed();
+            grapple.HandleHookShotStart();
+            break;
+        case State.HookshotFlyingPlayer:
+            grapple.HandleHookMovement();
+            HandleLook();
+            break;
         }
-        HandleLook();
-        HandleMove();
-        UpdateGravity();
-        HandleJump();
-        HandleSprint();
-        HandleCrouch();
-        HandleSpeed();
 
     }
 
@@ -156,7 +168,6 @@ public class Player : MonoBehaviour
 
     void HandleSpeed()
     {
-        if (activeGrapple) return;
         if(isCrouching && isSprinting && canSlide){
             if(!sliding){
                 slideTimer = slideLength;
@@ -213,7 +224,6 @@ public class Player : MonoBehaviour
 
     void HandleMove()
     {
-        if (activeGrapple) return;
         // Get X and Y values from Input
         var moveInput = moveAction.ReadValue<Vector2>();
 
@@ -230,51 +240,6 @@ public class Player : MonoBehaviour
         velocity.x = Mathf.Lerp(velocity.x, input.x, factor);
         velocity.z = Mathf.Lerp(velocity.z, input.z, factor);
 
-    }
-
-    private bool enableMovementOnNextTouch;
-    public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight)
-    {
-        activeGrapple = true;
-        velocityToSet = CalculateJumpVelocity(transform.position, targetPosition, trajectoryHeight);
-        Invoke(nameof(SetVelocity), 0.1f);
-        Invoke(nameof(ResetRestrictions), 3f);
-    }
-
-    private Vector3 velocityToSet;
-    private void SetVelocity()
-    {
-        velocity = velocityToSet;
-    }
-
-    public void ResetRestrictions()
-    {
-        activeGrapple = false;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (enableMovementOnNextTouch)
-        {
-            velocity = Vector3.zero;
-            speed = moveSpeed;
-            enableMovementOnNextTouch = false;
-            ResetRestrictions();
-            GetComponentInChildren<GrappleShot>().StopGrapple();
-        }
-    }
-
-
-    public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
-    {
-        float gravity = Physics.gravity.y;
-        float displacementY = endPoint.y - startPoint.y;
-        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
-
-        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
-        Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * trajectoryHeight / gravity) 
-            + Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
-
-        return velocityXZ + velocityY;
+        controller.Move(velocity*Time.deltaTime);
     }
 }

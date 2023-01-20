@@ -60,9 +60,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Gear",
+                    "name": "Grapple",
                     "type": "Button",
-                    "id": "1278c12f-5084-4ea9-9a01-7bfac4e35b74",
+                    "id": "37197839-e79f-4ff7-8db9-96080896e843",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -325,12 +325,12 @@
                 },
                 {
                     "name": "",
-                    "id": "593b538b-5820-45a3-9ce5-d9a57f36c88e",
+                    "id": "a0137305-1e4e-475f-ae6e-e578b2f28678",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Gear",
+                    "action": "Grapple",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
