@@ -50,7 +50,8 @@ public class Player : MonoBehaviour
 
     public enum State{
         Normal,
-        HookshotFlyingPlayer
+        HookshotFlyingPlayer,
+        HookshotThrown
     }
 
     void Awake()
@@ -90,6 +91,11 @@ public class Player : MonoBehaviour
             HandleCrouch();
             HandleSpeed();
             grapple.HandleHookShotStart();
+            break;
+        case State.HookshotThrown:
+            grapple.HandleHookShotThrow();
+            HandleLook();
+            HandleMove();
             break;
         case State.HookshotFlyingPlayer:
             grapple.HandleHookMovement();
