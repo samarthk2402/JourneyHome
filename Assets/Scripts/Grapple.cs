@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Grapple : MonoBehaviour
 {
+    [SerializeField] float cooldown;
+    private float cooldownTimer = 0f;
     private const float NORM_FOV = 60f;
     private const float HOOKSHOT_FOV = 100f;
 
@@ -21,6 +23,8 @@ public class Grapple : MonoBehaviour
     private CameraFOV cameraFov;
     public ParticleSystem speedLines;
 
+    private bool canGrapple = true;
+
     void Awake() {
         player = GetComponent<Player>();
         playerInput = GetComponent<PlayerInput>();
@@ -31,6 +35,13 @@ public class Grapple : MonoBehaviour
         speedLines.Stop();
     }
 
+    void Update()
+    {
+        if (cooldownTimer>0){
+            cooldownTimer -= Time.deltaTime;
+        }
+    }
+
     public void HandleHookShotStart()
     {
         var grappleInput = grappleAction.ReadValue<float>();
@@ -39,11 +50,13 @@ public class Grapple : MonoBehaviour
         {
             if(Physics.Raycast(cam.position, cam.forward, out RaycastHit hit))
             {
-                hookshot.transform.localScale = Vector3.zero;
-                hookshot.SetActive(true);
-                player.state = Player.State.HookshotThrown;
-                hookshotSize = 0f; 
-                hookshotPosition = hit.point;
+                if (cooldownTimer<=0 && canGrapple){
+                    hookshot.transform.localScale = Vector3.zero;
+                    hookshot.SetActive(true);
+                    player.state = Player.State.HookshotThrown;
+                    hookshotSize = 0f; 
+                    hookshotPosition = hit.point;
+                }
             }
         }
     }
@@ -85,9 +98,29 @@ public class Grapple : MonoBehaviour
             hookshot.SetActive(false);
             cameraFov.SetCameraFov(NORM_FOV);
             speedLines.Stop();
+            cooldownTimer = cooldown;
+            canGrapple = false;
+            StartCoroutine(waitForKeyRelease());
         }
 
         
+    }
+
+    IEnumerator waitForKeyRelease()
+    {
+        yield return new WaitUntil(grappleKeyRelease);
+        canGrapple = true;
+    }
+
+    bool grappleKeyRelease()
+    {
+        var grappleInput = grappleAction.ReadValue<float>();
+        if(grappleInput>0)
+        {
+            return false;
+        }else{
+            return true;
+        }
     }
     
 }

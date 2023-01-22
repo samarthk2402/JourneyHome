@@ -6783,6 +6783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf7bf4b002d93847a8f4623026a7f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 1
   cam: {fileID: 963194228}
   hookshot: {fileID: 1483298392}
   speedLines: {fileID: 1909446943}
@@ -6998,7 +6999,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909446940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0.5}
+  m_LocalPosition: {x: 0, y: 2, z: 1}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11796,7 +11797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a22a115813e57458dbe6c95034f9bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  cam: {fileID: 963194228}
 --- !u!1 &2123239905
 GameObject:
   m_ObjectHideFlags: 0
