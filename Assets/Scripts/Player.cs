@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] float sprintSpeed;
     [SerializeField] float crouchSpeed;
     [SerializeField] float slideSpeed;
+    [SerializeField] float slopeBoost;
     [SerializeField] float slideLength;
     [SerializeField] float slideCoolDown;
     [SerializeField] float mass;
@@ -34,19 +35,20 @@ public class Player : MonoBehaviour
 
     public CharacterController controller;
     public Vector3 velocity;
+    float ySpeed;
     float speed;
     float deltaSpeed;
     float currHeight;
     float heightTarget;
     bool isCrouching => normHeight-currHeight > .1f;
     bool isSprinting;
-    float myAng = 0.0f;
     float slideTimer;
     bool sliding;
     int resetSlide;
     public bool canSlide = true;
     public State state;
     private Grapple grapple;
+    private bool applyGravity = true;
 
     public enum State{
         Normal,
@@ -103,18 +105,25 @@ public class Player : MonoBehaviour
             break;
         }
 
+
     }
 
     void UpdateGravity()
     {
         var gravity = Physics.gravity * mass * Time.deltaTime;
-        velocity.y = controller.isGrounded ? -1f : velocity.y + gravity.y;
+        ySpeed = controller.isGrounded ? -1f : ySpeed + gravity.y;
     }
 
     void HandleCrouch()
     {
         var isTryingtoCrouch = crouchAction.ReadValue<float>() > 0;
-        var heightTarget = isTryingtoCrouch && canSlide ? crouchHeight : normHeight;
+        float heightTarget = 0;
+
+        if(isTryingtoCrouch&&canSlide){
+            heightTarget = crouchHeight;
+        }else{
+            heightTarget = normHeight;
+        }
         
         var crouchDelta = Time.deltaTime * crouchTime;
         currHeight = Mathf.Lerp(currHeight, heightTarget, crouchDelta);
@@ -190,7 +199,6 @@ public class Player : MonoBehaviour
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit) {
-        myAng = Vector3.Angle(Vector3.up, hit.normal); //Calc angle between normal and character
         // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.black, 3f);
         var angle = Vector3.Angle(Vector3.up, hit.normal);
         if(angle > controller.slopeLimit)
@@ -202,14 +210,39 @@ public class Player : MonoBehaviour
         }
     }
 
+
     void HandleJump()
     {
         var jumpInput = jumpAction.ReadValue<float>();
         if (jumpInput>0  && controller.isGrounded)
         {
-            velocity.y += jumpSpeed;
+            ySpeed += jumpSpeed;
         }
     }
+
+    // bool OnSlope(){
+    //         float frontPosY = 0;
+    //         float backPosY = 0;
+    //         if(Physics.Raycast(transform.position+(transform.forward*0.2f), Vector3.down, out RaycastHit frontHit, Mathf.Infinity)){
+    //             Debug.DrawLine(frontHit.point, frontHit.point + frontHit.normal, Color.black, 3f);
+    //             frontPosY = frontHit.point.y;
+    //         }
+
+    //         if(Physics.Raycast(transform.position+(transform.forward*-0.2f), Vector3.down, out RaycastHit backHit, Mathf.Infinity)){
+    //             Debug.DrawLine(backHit.point, backHit.point + backHit.normal, Color.black, 3f);
+    //             backPosY = backHit.point.y;
+    //         }
+
+    //         if(backPosY-frontPosY>0.1){
+    //             // Vector3 reverse = new Vector3(-1, 0, -1);
+    //             // adjustedVelocity = reverse;
+    //             return true;
+    //         }else{
+    //             return false;
+    //         }
+
+
+    // }
 
     void HandleLook()
     {
@@ -240,12 +273,13 @@ public class Player : MonoBehaviour
         input += transform.forward*moveInput.y;
         input += transform.right*moveInput.x;
         input = Vector3.ClampMagnitude(input, 1f);
-        input *= speed;
 
         var factor = acceleration * Time.deltaTime;
         velocity.x = Mathf.Lerp(velocity.x, input.x, factor);
         velocity.z = Mathf.Lerp(velocity.z, input.z, factor);
 
-        controller.Move(velocity*Time.deltaTime);
+        velocity.y = ySpeed;
+
+        controller.Move(velocity*speed*Time.deltaTime);
     }
 }

@@ -6694,6 +6694,7 @@ MonoBehaviour:
   sprintSpeed: 6
   crouchSpeed: 2
   slideSpeed: 7
+  slopeBoost: 100
   slideLength: 0.75
   slideCoolDown: 1
   mass: 1
