@@ -965,16 +965,16 @@ RectTransform:
   m_GameObject: {fileID: 837028275}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 663659175}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -590, y: 279}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 110, y: -278}
+  m_SizeDelta: {x: 200, y: -562}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &837028277
 MonoBehaviour:
@@ -7107,7 +7107,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1534203229}
-  m_Mesh: {fileID: -3727299226792910341, guid: e6efe674338ad4a49866fd7e5c2ba6b4, type: 3}
+  m_Mesh: {fileID: 6899345391315554915, guid: c51cc469ccc215845a45d6edd5359253, type: 3}
 --- !u!114 &1534203234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7122,9 +7122,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   range: 100
-  fireRate: 5
+  fireRate: 10
   reloadSpeed: 1
-  ammo: 5
+  maxAmmo: 30
+  autoFire: 1
   ammoText: {fileID: 837028277}
   fpsCam: {fileID: 963194227}
   muzzleFlash: {fileID: 992170098}
@@ -7141,7 +7142,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: -3727299226792910341, guid: e6efe674338ad4a49866fd7e5c2ba6b4, type: 3}
+  m_Mesh: {fileID: 6899345391315554915, guid: c51cc469ccc215845a45d6edd5359253, type: 3}
 --- !u!1001 &1890639741
 PrefabInstance:
   m_ObjectHideFlags: 0

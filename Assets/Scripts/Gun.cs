@@ -10,7 +10,8 @@ public class Gun : MonoBehaviour
     public float range = 100f;
     public float fireRate = 15f;
     public float reloadSpeed = 1;
-    public float ammo = 5;
+    public float maxAmmo = 5;
+    public bool autoFire;
     public TMP_Text ammoText;
 
     public Camera fpsCam;
@@ -19,30 +20,65 @@ public class Gun : MonoBehaviour
 
     PlayerInput playerInput;
     InputAction shootAction;
+    InputAction reloadAction;
 
     private float nextTimeToFire = 0f;
     private bool canShoot = true;
+    private bool isReloading = false;
+    private float ammo;
+
 
     void Awake(){
         playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["fire"];
+        reloadAction = playerInput.actions["reload"];
+    }
+
+    void Start()
+    {
+        ammo = maxAmmo;
     }
 
     void Update()
-    {   
-        ammoText.text = "Ammo: " + ammo.ToString();
+    {   if (isReloading){
+            ammoText.text = "Reloading...";
+        }else{
+            ammoText.text = "Ammo: " + ammo.ToString();
+        }
     }
 
     void FixedUpdate()
     {
         var shootInput = shootAction.ReadValue<float>();
-        if (shootInput>0 && Time.time >= nextTimeToFire && canShoot)
+        var reloadInput = reloadAction.ReadValue<float>();
+
+        if (shootInput>0 && Time.time >= nextTimeToFire && canShoot && !isReloading)
         {
-            nextTimeToFire = Time.time + 1f / fireRate;
-            canShoot = false;
-            Shoot();
-            StartCoroutine(waitForKeyRelease());
+            if (ammo>0){
+                nextTimeToFire = Time.time + 1f / fireRate;
+                Shoot();
+                if (!autoFire){
+                    canShoot = false;
+                    StartCoroutine(waitForKeyRelease());
+                }
+            }else{
+                isReloading = true;
+                StartCoroutine(Reload());
+            }
+
         }
+
+        if (reloadInput>0 && ammo<maxAmmo && !isReloading){
+            isReloading = true;
+            StartCoroutine(Reload());
+        }
+    }
+
+    private IEnumerator Reload()
+    {
+        yield return new WaitForSeconds(reloadSpeed);
+        isReloading = false;
+        ammo = maxAmmo;
     }
 
     public IEnumerator waitForKeyRelease()
@@ -61,6 +97,7 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
+        ammo -= 1;
         muzzleFlash.Play();
 
         RaycastHit hit;
@@ -77,12 +114,5 @@ public class Gun : MonoBehaviour
             // Destroy(impactGO, 2f);
         }
     }
-
-    // IEnumerator showDamage(float damage){
-    //     Instantiate(damageText, new Vector3(110, 0, 0), Quaternion.identity);
-    //     damageText.text = System.Convert.ToString(damage);
-    //     yield return new WaitForSeconds(0.5f);
-    //     DestroyImmediate(damageText, true);
-    // }
 
 }
