@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class Gun : MonoBehaviour
 {
     public float damage = 10f;
     public float range = 100f;
     public float fireRate = 15f;
+    public float reloadSpeed = 1;
+    public float ammo = 5;
+    public TMP_Text ammoText;
 
     public Camera fpsCam;
     public ParticleSystem muzzleFlash;
@@ -22,6 +26,11 @@ public class Gun : MonoBehaviour
     void Awake(){
         playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["fire"];
+    }
+
+    void Update()
+    {   
+        ammoText.text = "Ammo: " + ammo.ToString();
     }
 
     void FixedUpdate()
