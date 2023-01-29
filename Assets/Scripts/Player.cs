@@ -48,7 +48,6 @@ public class Player : MonoBehaviour
     public bool canSlide = true;
     public State state;
     private Grapple grapple;
-    private bool applyGravity = true;
 
     public enum State{
         Normal,
