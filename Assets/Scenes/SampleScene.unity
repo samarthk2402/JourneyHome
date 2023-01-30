@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -973,7 +973,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: -278}
+  m_AnchoredPosition: {x: 110, y: -45.6}
   m_SizeDelta: {x: 200, y: -562}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &837028277
@@ -7120,12 +7120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ab2e3bd73cf1c40bfbbb3b0756d8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  range: 100
-  fireRate: 10
-  reloadSpeed: 1
-  maxAmmo: 30
-  autoFire: 1
+  gunScriptableObject: {fileID: 11400000, guid: f12d643db5fd4fe48b86431fc986f6da, type: 2}
   ammoText: {fileID: 837028277}
   fpsCam: {fileID: 963194227}
   muzzleFlash: {fileID: 992170098}

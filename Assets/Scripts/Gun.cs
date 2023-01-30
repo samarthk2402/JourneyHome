@@ -6,12 +6,7 @@ using TMPro;
 
 public class Gun : MonoBehaviour
 {
-    public float damage = 10f;
-    public float range = 100f;
-    public float fireRate = 15f;
-    public float reloadSpeed = 1;
-    public float maxAmmo = 5;
-    public bool autoFire;
+    [SerializeField] private GunObject gunScriptableObject;
     public TMP_Text ammoText;
 
     public Camera fpsCam;
@@ -36,7 +31,7 @@ public class Gun : MonoBehaviour
 
     void Start()
     {
-        ammo = maxAmmo;
+        ammo = gunScriptableObject.maxAmmo;
     }
 
     void Update()
@@ -55,9 +50,9 @@ public class Gun : MonoBehaviour
         if (shootInput>0 && Time.time >= nextTimeToFire && canShoot && !isReloading)
         {
             if (ammo>0){
-                nextTimeToFire = Time.time + 1f / fireRate;
+                nextTimeToFire = Time.time + 1f / gunScriptableObject.fireRate;
                 Shoot();
-                if (!autoFire){
+                if (!gunScriptableObject.autoFire){
                     canShoot = false;
                     StartCoroutine(waitForKeyRelease());
                 }
@@ -68,7 +63,7 @@ public class Gun : MonoBehaviour
 
         }
 
-        if (reloadInput>0 && ammo<maxAmmo && !isReloading){
+        if (reloadInput>0 && ammo<gunScriptableObject.maxAmmo && !isReloading){
             isReloading = true;
             StartCoroutine(Reload());
         }
@@ -76,9 +71,9 @@ public class Gun : MonoBehaviour
 
     private IEnumerator Reload()
     {
-        yield return new WaitForSeconds(reloadSpeed);
+        yield return new WaitForSeconds(gunScriptableObject.reloadSpeed);
         isReloading = false;
-        ammo = maxAmmo;
+        ammo = gunScriptableObject.maxAmmo;
     }
 
     public IEnumerator waitForKeyRelease()
@@ -101,13 +96,13 @@ public class Gun : MonoBehaviour
         muzzleFlash.Play();
 
         RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, gunScriptableObject.range))
         {
 
             Target target = hit.transform.GetComponent<Target>();
             if (target != null)
             {
-                target.TakeDamage(damage);
+                target.TakeDamage(gunScriptableObject.damage);
             }
 
             // GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
