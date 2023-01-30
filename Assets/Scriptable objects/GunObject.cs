@@ -11,4 +11,5 @@ public class GunObject : ScriptableObject
     public float reloadSpeed = 1;
     public float maxAmmo = 5;
     public bool autoFire;
+    public Mesh weaponMesh; 
 }

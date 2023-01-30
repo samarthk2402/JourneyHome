@@ -18,3 +18,4 @@ MonoBehaviour:
   reloadSpeed: 1
   maxAmmo: 5
   autoFire: 0
+  weaponMesh: {fileID: -3727299226792910341, guid: e6efe674338ad4a49866fd7e5c2ba6b4, type: 3}

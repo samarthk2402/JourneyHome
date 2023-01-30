@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3924cf51ec43554e8bdfb60e9618a57, type: 3}
-  m_Name: SMG
+  m_Name: AR
   m_EditorClassIdentifier: 
-  damage: 5
-  range: 50
-  fireRate: 10
+  damage: 7
+  range: 100
+  fireRate: 7
   reloadSpeed: 1
-  maxAmmo: 20
+  maxAmmo: 15
   autoFire: 1
-  weaponMesh: {fileID: 6899345391315554915, guid: c51cc469ccc215845a45d6edd5359253, type: 3}
+  weaponMesh: {fileID: -695774298109068085, guid: a5f56547380d3e6448e877c01e64c479, type: 3}

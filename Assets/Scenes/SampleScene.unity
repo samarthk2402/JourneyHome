@@ -7120,10 +7120,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ab2e3bd73cf1c40bfbbb3b0756d8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunScriptableObject: {fileID: 11400000, guid: f12d643db5fd4fe48b86431fc986f6da, type: 2}
+  gunScriptableObject: {fileID: 11400000, guid: c5368fdfce00a554ca52cd8e4d7cbaea, type: 2}
   ammoText: {fileID: 837028277}
   fpsCam: {fileID: 963194227}
   muzzleFlash: {fileID: 992170098}
+  gunMeshFilter: {fileID: 1534203233}
 --- !u!64 &1534203235
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3924cf51ec43554e8bdfb60e9618a57, type: 3}
-  m_Name: SMG
+  m_Name: Shotgun
   m_EditorClassIdentifier: 
-  damage: 5
-  range: 50
-  fireRate: 10
-  reloadSpeed: 1
-  maxAmmo: 20
-  autoFire: 1
-  weaponMesh: {fileID: 6899345391315554915, guid: c51cc469ccc215845a45d6edd5359253, type: 3}
+  damage: 30
+  range: 20
+  fireRate: 15
+  reloadSpeed: 1.2
+  maxAmmo: 8
+  autoFire: 0
+  weaponMesh: {fileID: 1773197216858952008, guid: f33a6750edda74241bd72bbd1b8fec7d, type: 3}

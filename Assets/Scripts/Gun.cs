@@ -12,6 +12,7 @@ public class Gun : MonoBehaviour
     public Camera fpsCam;
     public ParticleSystem muzzleFlash;
     // public GameObject impactEffect;
+    public MeshFilter gunMeshFilter;
 
     PlayerInput playerInput;
     InputAction shootAction;
@@ -24,6 +25,7 @@ public class Gun : MonoBehaviour
 
 
     void Awake(){
+        gunMeshFilter.mesh = gunScriptableObject.weaponMesh;
         playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["fire"];
         reloadAction = playerInput.actions["reload"];
