@@ -9,7 +9,7 @@ public class GunObject : ScriptableObject
     public float range = 100f;
     public float fireRate = 15f;
     public float reloadSpeed = 1;
-    public float maxAmmo = 5;
+    public int maxAmmo = 5;
     public bool autoFire;
     public Mesh weaponMesh; 
 }

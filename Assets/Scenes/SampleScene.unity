@@ -972,9 +972,9 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: -45.6}
-  m_SizeDelta: {x: 200, y: -562}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 128, y: 145}
+  m_SizeDelta: {x: 200, y: -194}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &837028277
 MonoBehaviour:
@@ -7120,7 +7120,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ab2e3bd73cf1c40bfbbb3b0756d8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunScriptableObject: {fileID: 11400000, guid: c5368fdfce00a554ca52cd8e4d7cbaea, type: 2}
+  weapons:
+  - {fileID: 11400000, guid: 3a97d00eca749344eb85a5bbd5e67579, type: 2}
+  - {fileID: 11400000, guid: c5368fdfce00a554ca52cd8e4d7cbaea, type: 2}
+  - {fileID: 11400000, guid: f6a527f5cff7851408f066e735c5eb7f, type: 2}
   ammoText: {fileID: 837028277}
   fpsCam: {fileID: 963194227}
   muzzleFlash: {fileID: 992170098}

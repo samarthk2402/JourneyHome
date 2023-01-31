@@ -6,7 +6,7 @@ using TMPro;
 
 public class Gun : MonoBehaviour
 {
-    [SerializeField] private GunObject gunScriptableObject;
+    [SerializeField] List<GunObject> weapons = new List<GunObject>();
     public TMP_Text ammoText;
 
     public Camera fpsCam;
@@ -17,31 +17,65 @@ public class Gun : MonoBehaviour
     PlayerInput playerInput;
     InputAction shootAction;
     InputAction reloadAction;
+    InputAction scrollAction;
 
     private float nextTimeToFire = 0f;
     private bool canShoot = true;
     private bool isReloading = false;
-    private float ammo;
-
+    private List<int> ammo = new List<int>();
+    private int weaponIndex = 0;
+    private IEnumerator reload = null;
 
     void Awake(){
-        gunMeshFilter.mesh = gunScriptableObject.weaponMesh;
         playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["fire"];
         reloadAction = playerInput.actions["reload"];
+        scrollAction = playerInput.actions["scroll"];
     }
 
     void Start()
     {
-        ammo = gunScriptableObject.maxAmmo;
+        for(int i = 0; i < weapons.Count; i++){
+            ammo.Add(weapons[i].maxAmmo);
+        }
     }
 
     void Update()
     {   if (isReloading){
             ammoText.text = "Reloading...";
         }else{
-            ammoText.text = "Ammo: " + ammo.ToString();
+            ammoText.text = "Ammo: " + ammo[weaponIndex].ToString();
         }
+
+        var scrollInput = scrollAction.ReadValue<float>();
+        if (scrollInput>0){
+            if(isReloading){
+                StopCoroutine(reload);
+                ammo[weaponIndex] = 0;
+                isReloading = false;
+            }
+
+            if (weaponIndex < weapons.Count-1){
+                weaponIndex += 1;
+            }else{
+                weaponIndex = 0;
+            }
+        }else if (scrollInput<0){
+            if(isReloading){
+                StopCoroutine(reload);
+                ammo[weaponIndex] = 0;
+                isReloading = false;
+            }
+
+            if (weaponIndex > 0){
+                weaponIndex -= 1;
+            }else{
+                weaponIndex = weapons.Count-1;
+            }
+        }
+
+        gunMeshFilter.mesh = weapons[weaponIndex].weaponMesh;
+
     }
 
     void FixedUpdate()
@@ -51,31 +85,33 @@ public class Gun : MonoBehaviour
 
         if (shootInput>0 && Time.time >= nextTimeToFire && canShoot && !isReloading)
         {
-            if (ammo>0){
-                nextTimeToFire = Time.time + 1f / gunScriptableObject.fireRate;
+            if (ammo[weaponIndex]>0){
+                nextTimeToFire = Time.time + 1f / weapons[weaponIndex].fireRate;
                 Shoot();
-                if (!gunScriptableObject.autoFire){
+                if (!weapons[weaponIndex].autoFire){
                     canShoot = false;
                     StartCoroutine(waitForKeyRelease());
                 }
             }else{
                 isReloading = true;
-                StartCoroutine(Reload());
+                reload = Reload();
+                StartCoroutine(reload);
             }
 
         }
 
-        if (reloadInput>0 && ammo<gunScriptableObject.maxAmmo && !isReloading){
+        if (reloadInput>0 && ammo[weaponIndex]<weapons[weaponIndex].maxAmmo && !isReloading){
             isReloading = true;
-            StartCoroutine(Reload());
+            reload = Reload();
+            StartCoroutine(reload);
         }
     }
 
     private IEnumerator Reload()
     {
-        yield return new WaitForSeconds(gunScriptableObject.reloadSpeed);
+        yield return new WaitForSeconds(weapons[weaponIndex].reloadSpeed);
         isReloading = false;
-        ammo = gunScriptableObject.maxAmmo;
+        ammo[weaponIndex] = weapons[weaponIndex].maxAmmo;
     }
 
     public IEnumerator waitForKeyRelease()
@@ -94,17 +130,17 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
-        ammo -= 1;
+        ammo[weaponIndex] -= 1;
         muzzleFlash.Play();
 
         RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, gunScriptableObject.range))
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, weapons[weaponIndex].range))
         {
 
             Target target = hit.transform.GetComponent<Target>();
             if (target != null)
             {
-                target.TakeDamage(gunScriptableObject.damage);
+                target.TakeDamage(weapons[weaponIndex].damage);
             }
 
             // GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
