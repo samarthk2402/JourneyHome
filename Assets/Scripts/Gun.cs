@@ -8,7 +8,10 @@ public class Gun : MonoBehaviour
 {
     [SerializeField] List<GunObject> weapons = new List<GunObject>();
     [SerializeField] List<Scope> scopes = new List<Scope>();
+    [SerializeField] List<Magazine> mags = new List<Magazine>();
+    [SerializeField] List<Suppressor> suppressors = new List<Suppressor>();
     public GameObject scope;
+    public GameObject suppressor;
     public Transform body;
     public TMP_Text ammoText;
 
@@ -18,6 +21,7 @@ public class Gun : MonoBehaviour
     // public GameObject impactEffect;
     public MeshFilter gunMeshFilter;
     public MeshFilter scopeMeshFilter;
+    public MeshFilter suppressorMeshFilter;
 
     PlayerInput playerInput;
     InputAction shootAction;
@@ -33,6 +37,7 @@ public class Gun : MonoBehaviour
     private IEnumerator reload = null;
     private float startFOV;
     private float zoomMultiplier;
+    private float damageOffset;
 
     void Awake(){
         playerInput = GetComponentInParent<PlayerInput>();
@@ -48,7 +53,7 @@ public class Gun : MonoBehaviour
         camFOV = GetComponentInParent<CameraFOV>();
 
         for(int i = 0; i < weapons.Count; i++){
-            ammo.Add(weapons[i].maxAmmo);
+            ammo.Add(mags[i].maxAmmo);
         }
 
         var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
@@ -93,6 +98,9 @@ public class Gun : MonoBehaviour
 
             var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
             body.localPosition = bodyOffset;
+
+            suppressor.transform.localScale = new Vector3(suppressor.transform.localScale.x*suppressors[weaponIndex].size, suppressor.transform.localScale.y, suppressor.transform.localScale.z*suppressors[weaponIndex].size);
+            
         }
 
         gunMeshFilter.mesh = weapons[weaponIndex].weaponMesh;
@@ -105,6 +113,16 @@ public class Gun : MonoBehaviour
         catch{
             scope.SetActive(false);
             zoomMultiplier = 1;
+        }
+
+        try{
+            suppressor.SetActive(true);
+            suppressorMeshFilter.mesh = suppressors[weaponIndex].suppressorMesh;
+            damageOffset = suppressors[weaponIndex].damageOffset;
+        }
+        catch{
+            suppressor.SetActive(false);
+            damageOffset = 0;
         }
 
         
@@ -156,9 +174,9 @@ public class Gun : MonoBehaviour
 
     private IEnumerator Reload()
     {
-        yield return new WaitForSeconds(weapons[weaponIndex].reloadSpeed);
+        yield return new WaitForSeconds(mags[weaponIndex].reloadSpeed);
         isReloading = false;
-        ammo[weaponIndex] = weapons[weaponIndex].maxAmmo;
+        ammo[weaponIndex] = mags[weaponIndex].maxAmmo;
     }
 
     public IEnumerator waitForKeyRelease()
@@ -187,7 +205,7 @@ public class Gun : MonoBehaviour
             Target target = hit.transform.GetComponent<Target>();
             if (target != null)
             {
-                target.TakeDamage(weapons[weaponIndex].damage);
+                target.TakeDamage(weapons[weaponIndex].damage-damageOffset);
             }
 
             // GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
