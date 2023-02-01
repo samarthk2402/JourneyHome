@@ -19,3 +19,6 @@ MonoBehaviour:
   maxAmmo: 2
   autoFire: 0
   weaponMesh: {fileID: 4300004, guid: 018d5bd3bfb8b6a49a8b354ba11e4a8f, type: 3}
+  yOffset: -0.28
+  xOffset: 0.5
+  zOffset: 0

@@ -9,6 +9,7 @@ public class Gun : MonoBehaviour
     [SerializeField] List<GunObject> weapons = new List<GunObject>();
     [SerializeField] List<Scope> scopes = new List<Scope>();
     public GameObject scope;
+    public Transform body;
     public TMP_Text ammoText;
 
     public Camera fpsCam;
@@ -45,9 +46,13 @@ public class Gun : MonoBehaviour
     {
         startFOV = 60;
         camFOV = GetComponentInParent<CameraFOV>();
+
         for(int i = 0; i < weapons.Count; i++){
             ammo.Add(weapons[i].maxAmmo);
         }
+
+        var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
+        body.localPosition = bodyOffset;
     }
 
     void Update()
@@ -70,6 +75,9 @@ public class Gun : MonoBehaviour
             }else{
                 weaponIndex = 0;
             }
+
+            var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
+            body.localPosition = bodyOffset;
         }else if (scrollInput<0){
             if(isReloading){
                 StopCoroutine(reload);
@@ -82,6 +90,9 @@ public class Gun : MonoBehaviour
             }else{
                 weaponIndex = weapons.Count-1;
             }
+
+            var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
+            body.localPosition = bodyOffset;
         }
 
         gunMeshFilter.mesh = weapons[weaponIndex].weaponMesh;
@@ -96,7 +107,10 @@ public class Gun : MonoBehaviour
             zoomMultiplier = 1;
         }
 
+        
+
     }
+    
 
     void FixedUpdate()
     {
@@ -129,12 +143,12 @@ public class Gun : MonoBehaviour
 
         if(zoomInput>0){
             Vector3 pos = transform.localPosition;
-            pos.x = 0f;
+            pos.x = -0.5f;
             transform.localPosition = pos;
             camFOV.SetCameraFov(startFOV/zoomMultiplier);
         }else{
             Vector3 pos = transform.localPosition;
-            pos.x = 0.5f;
+            pos.x = 0f;
             transform.localPosition = pos;
             camFOV.SetCameraFov(startFOV);
         }

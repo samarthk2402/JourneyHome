@@ -12,4 +12,7 @@ public class GunObject : ScriptableObject
     public int maxAmmo = 5;
     public bool autoFire;
     public Mesh weaponMesh; 
+    public float yOffset;
+    public float xOffset;
+    public float zOffset;
 }
