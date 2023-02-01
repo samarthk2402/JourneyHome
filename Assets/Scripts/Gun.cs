@@ -7,17 +7,22 @@ using TMPro;
 public class Gun : MonoBehaviour
 {
     [SerializeField] List<GunObject> weapons = new List<GunObject>();
+    [SerializeField] List<Scope> scopes = new List<Scope>();
+    public GameObject scope;
     public TMP_Text ammoText;
 
     public Camera fpsCam;
+    private CameraFOV camFOV;
     public ParticleSystem muzzleFlash;
     // public GameObject impactEffect;
     public MeshFilter gunMeshFilter;
+    public MeshFilter scopeMeshFilter;
 
     PlayerInput playerInput;
     InputAction shootAction;
     InputAction reloadAction;
     InputAction scrollAction;
+    InputAction zoomAction;
 
     private float nextTimeToFire = 0f;
     private bool canShoot = true;
@@ -25,16 +30,21 @@ public class Gun : MonoBehaviour
     private List<int> ammo = new List<int>();
     private int weaponIndex = 0;
     private IEnumerator reload = null;
+    private float startFOV;
+    private float zoomMultiplier;
 
     void Awake(){
         playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["fire"];
         reloadAction = playerInput.actions["reload"];
         scrollAction = playerInput.actions["scroll"];
+        zoomAction = playerInput.actions["zoom"];
     }
 
     void Start()
     {
+        startFOV = 60;
+        camFOV = GetComponentInParent<CameraFOV>();
         for(int i = 0; i < weapons.Count; i++){
             ammo.Add(weapons[i].maxAmmo);
         }
@@ -75,6 +85,16 @@ public class Gun : MonoBehaviour
         }
 
         gunMeshFilter.mesh = weapons[weaponIndex].weaponMesh;
+        
+        try{
+            scope.SetActive(true);
+            scopeMeshFilter.mesh = scopes[weaponIndex].scopeMesh;
+            zoomMultiplier = scopes[weaponIndex].zoomMultiplier;
+        }
+        catch{
+            scope.SetActive(false);
+            zoomMultiplier = 1;
+        }
 
     }
 
@@ -82,6 +102,7 @@ public class Gun : MonoBehaviour
     {
         var shootInput = shootAction.ReadValue<float>();
         var reloadInput = reloadAction.ReadValue<float>();
+        var zoomInput = zoomAction.ReadValue<float>();
 
         if (shootInput>0 && Time.time >= nextTimeToFire && canShoot && !isReloading)
         {
@@ -104,6 +125,18 @@ public class Gun : MonoBehaviour
             isReloading = true;
             reload = Reload();
             StartCoroutine(reload);
+        }
+
+        if(zoomInput>0){
+            Vector3 pos = transform.localPosition;
+            pos.x = 0f;
+            transform.localPosition = pos;
+            camFOV.SetCameraFov(startFOV/zoomMultiplier);
+        }else{
+            Vector3 pos = transform.localPosition;
+            pos.x = 0.5f;
+            transform.localPosition = pos;
+            camFOV.SetCameraFov(startFOV);
         }
     }
 
