@@ -22,3 +22,4 @@ MonoBehaviour:
   yOffset: -0.25
   xOffset: 0.54
   zOffset: 0
+  suppressorPos: {x: 0.02, y: 0.065, z: -0.45}

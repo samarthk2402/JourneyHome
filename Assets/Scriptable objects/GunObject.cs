@@ -15,4 +15,5 @@ public class GunObject : ScriptableObject
     public float yOffset;
     public float xOffset;
     public float zOffset;
+    public Vector3 suppressorPos;
 }

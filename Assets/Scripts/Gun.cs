@@ -56,51 +56,17 @@ public class Gun : MonoBehaviour
             ammo.Add(mags[i].maxAmmo);
         }
 
-        var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
-        body.localPosition = bodyOffset;
+        SwitchWeapon(weaponIndex);
     }
 
     void Update()
-    {   if (isReloading){
+    { 
+        var scrollInput = scrollAction.ReadValue<float>();
+
+          if (isReloading){
             ammoText.text = "Reloading...";
         }else{
             ammoText.text = "Ammo: " + ammo[weaponIndex].ToString();
-        }
-
-        var scrollInput = scrollAction.ReadValue<float>();
-        if (scrollInput>0){
-            if(isReloading){
-                StopCoroutine(reload);
-                ammo[weaponIndex] = 0;
-                isReloading = false;
-            }
-
-            if (weaponIndex < weapons.Count-1){
-                weaponIndex += 1;
-            }else{
-                weaponIndex = 0;
-            }
-
-            var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
-            body.localPosition = bodyOffset;
-        }else if (scrollInput<0){
-            if(isReloading){
-                StopCoroutine(reload);
-                ammo[weaponIndex] = 0;
-                isReloading = false;
-            }
-
-            if (weaponIndex > 0){
-                weaponIndex -= 1;
-            }else{
-                weaponIndex = weapons.Count-1;
-            }
-
-            var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
-            body.localPosition = bodyOffset;
-
-            suppressor.transform.localScale = new Vector3(suppressor.transform.localScale.x*suppressors[weaponIndex].size, suppressor.transform.localScale.y, suppressor.transform.localScale.z*suppressors[weaponIndex].size);
-            
         }
 
         gunMeshFilter.mesh = weapons[weaponIndex].weaponMesh;
@@ -125,8 +91,49 @@ public class Gun : MonoBehaviour
             damageOffset = 0;
         }
 
-        
+        if (scrollInput>0){
+            if(isReloading){
+                StopCoroutine(reload);
+                ammo[weaponIndex] = 0;
+                isReloading = false;
+            }
 
+            if (weaponIndex < weapons.Count-1){
+                weaponIndex += 1;
+            }else{
+                weaponIndex = 0;
+            }  
+
+            SwitchWeapon(weaponIndex);
+
+        }else if (scrollInput<0){
+            if(isReloading){
+                StopCoroutine(reload);
+                ammo[weaponIndex] = 0;
+                isReloading = false;
+            }
+
+            if (weaponIndex > 0){
+                weaponIndex -= 1;
+            }else{
+                weaponIndex = weapons.Count-1;
+            }  
+
+            SwitchWeapon(weaponIndex);         
+        }
+
+    }
+
+    void SwitchWeapon(int weaponIndex){
+        bool isSuppressor = suppressors[weaponIndex] != null;
+        Debug.Log(weaponIndex.ToString() + isSuppressor.ToString());
+        var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
+        body.localPosition = bodyOffset;
+
+        if (suppressors[weaponIndex] != null){
+            suppressor.transform.localPosition = weapons[weaponIndex].suppressorPos;
+            suppressor.transform.localScale = new Vector3(suppressors[weaponIndex].size, 0.1f, suppressors[weaponIndex].size);
+        }
     }
     
 

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SmallSuppressor
   m_EditorClassIdentifier: 
   suppressorMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
-  damageOffset: 2
-  size: 1
+  damageOffset: 1
+  size: 0.05
