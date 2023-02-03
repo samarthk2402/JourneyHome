@@ -12,14 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3924cf51ec43554e8bdfb60e9618a57, type: 3}
   m_Name: Sniper
   m_EditorClassIdentifier: 
-  damage: 50
-  range: 200
+  range: 100
   fireRate: 15
-  reloadSpeed: 3
-  maxAmmo: 2
   autoFire: 0
   weaponMesh: {fileID: 4300004, guid: 018d5bd3bfb8b6a49a8b354ba11e4a8f, type: 3}
   yOffset: -0.28
   xOffset: 0.5
-  zOffset: 0
   suppressorPos: {x: 0, y: 0.04, z: -1}

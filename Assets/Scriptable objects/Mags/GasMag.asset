@@ -10,7 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e64578f8c162ca841a860c32ffe9d5ba, type: 3}
-  m_Name: SmallMag
+  m_Name: GasMag
   m_EditorClassIdentifier: 
-  maxAmmo: 5
-  reloadSpeed: 0.5
+  maxAmmo: 100
+  damage: 2
+  shootParticleSystem: {fileID: 7361453720771605493, guid: 14c05106a31871049bb07a72cac62db0, type: 3}
+  lineRenderer: {fileID: 0}
+  psTime: 1.1
+  reloadSpeed: 3
+  damageOverTime: 1
+  hit_num: 5
+  slowEffect: 0

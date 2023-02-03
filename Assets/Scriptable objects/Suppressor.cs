@@ -6,6 +6,5 @@ using UnityEngine;
 public class Suppressor : ScriptableObject
 {
     public Mesh suppressorMesh;
-    public float damageOffset;
     public float size;
 }

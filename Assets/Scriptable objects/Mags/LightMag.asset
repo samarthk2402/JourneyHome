@@ -10,7 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e64578f8c162ca841a860c32ffe9d5ba, type: 3}
-  m_Name: BigMag
+  m_Name: LightMag
   m_EditorClassIdentifier: 
-  maxAmmo: 30
-  reloadSpeed: 3
+  maxAmmo: 15
+  damage: 10
+  shootParticleSystem: {fileID: 773973743051849277, guid: 6c3f2488119338142a57922178d96fa9, type: 3}
+  lineRenderer: {fileID: 0}
+  psTime: 0.2
+  reloadSpeed: 1.5
+  damageOverTime: 0
+  hit_num: 0
+  slowEffect: 0

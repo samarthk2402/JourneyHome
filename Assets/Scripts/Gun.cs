@@ -17,7 +17,6 @@ public class Gun : MonoBehaviour
 
     public Camera fpsCam;
     private CameraFOV camFOV;
-    public ParticleSystem muzzleFlash;
     // public GameObject impactEffect;
     public MeshFilter gunMeshFilter;
     public MeshFilter scopeMeshFilter;
@@ -37,7 +36,6 @@ public class Gun : MonoBehaviour
     private IEnumerator reload = null;
     private float startFOV;
     private float zoomMultiplier;
-    private float damageOffset;
 
     void Awake(){
         playerInput = GetComponentInParent<PlayerInput>();
@@ -84,11 +82,9 @@ public class Gun : MonoBehaviour
         try{
             suppressor.SetActive(true);
             suppressorMeshFilter.mesh = suppressors[weaponIndex].suppressorMesh;
-            damageOffset = suppressors[weaponIndex].damageOffset;
         }
         catch{
             suppressor.SetActive(false);
-            damageOffset = 0;
         }
 
         if (scrollInput>0){
@@ -126,7 +122,6 @@ public class Gun : MonoBehaviour
 
     void SwitchWeapon(int weaponIndex){
         bool isSuppressor = suppressors[weaponIndex] != null;
-        Debug.Log(weaponIndex.ToString() + isSuppressor.ToString());
         var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
         body.localPosition = bodyOffset;
 
@@ -160,7 +155,7 @@ public class Gun : MonoBehaviour
 
         }
 
-        if (reloadInput>0 && ammo[weaponIndex]<weapons[weaponIndex].maxAmmo && !isReloading){
+        if (reloadInput>0 && ammo[weaponIndex]<mags[weaponIndex].maxAmmo && !isReloading){
             isReloading = true;
             reload = Reload();
             StartCoroutine(reload);
@@ -203,7 +198,22 @@ public class Gun : MonoBehaviour
     void Shoot()
     {
         ammo[weaponIndex] -= 1;
-        muzzleFlash.Play();
+
+        if(mags[weaponIndex].shootParticleSystem != null){
+            Vector3 particleOffset = new Vector3(0f, 0f, 0.1f);
+            ParticleSystem muzzleFlash = Instantiate(mags[weaponIndex].shootParticleSystem, weapons[weaponIndex].suppressorPos, transform.rotation, body);
+            muzzleFlash.transform.localPosition = weapons[weaponIndex].suppressorPos;
+            muzzleFlash.Play();
+            StartCoroutine(DestroyAfterSeconds(mags[weaponIndex].psTime, muzzleFlash.gameObject));
+        }
+
+        if(mags[weaponIndex].lineRenderer != null){
+                Vector3 endPoint = new Vector3(0, 0, weapons[weaponIndex].range);
+                LineRenderer lr = Instantiate(mags[weaponIndex].lineRenderer, weapons[weaponIndex].suppressorPos, transform.rotation, body);
+                lr.transform.localPosition =  weapons[weaponIndex].suppressorPos;
+                lr.SetPosition(1, lr.transform.localPosition + endPoint);
+                StartCoroutine(DestroyAfterSeconds(mags[weaponIndex].psTime, lr.gameObject));
+        }
 
         RaycastHit hit;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, weapons[weaponIndex].range))
@@ -212,12 +222,25 @@ public class Gun : MonoBehaviour
             Target target = hit.transform.GetComponent<Target>();
             if (target != null)
             {
-                target.TakeDamage(weapons[weaponIndex].damage-damageOffset);
+                if(mags[weaponIndex].damageOverTime){
+                    IEnumerator takedot =  target.TakeDamageOverTime(mags[weaponIndex].damage, mags[weaponIndex].hit_num);
+                    StartCoroutine(takedot);
+                    if(target.currentHealth-mags[weaponIndex].damage<=0){
+                        Destroy(target.gameObject);
+                    }
+                }else{
+                    target.TakeDamage(mags[weaponIndex].damage);
+                }
             }
 
             // GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             // Destroy(impactGO, 2f);
         }
+    }
+
+    private IEnumerator DestroyAfterSeconds(float seconds, GameObject muzzleFlash){
+        yield return new WaitForSeconds(seconds);
+        Destroy(muzzleFlash.gameObject);
     }
 
 }

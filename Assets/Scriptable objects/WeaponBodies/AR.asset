@@ -12,14 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3924cf51ec43554e8bdfb60e9618a57, type: 3}
   m_Name: AR
   m_EditorClassIdentifier: 
-  damage: 7
-  range: 100
+  range: 15
   fireRate: 7
-  reloadSpeed: 1
-  maxAmmo: 15
   autoFire: 1
   weaponMesh: {fileID: 4300000, guid: 01890195b95a26f4fa4aa4f8f5a0cc5e, type: 3}
   yOffset: -0.25
   xOffset: 0.54
-  zOffset: 0
   suppressorPos: {x: 0.02, y: 0.065, z: -0.45}
