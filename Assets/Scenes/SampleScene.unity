@@ -156,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -300, y: 70}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &212252248
@@ -684,12 +684,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c5d7bd3022ff4b45887375627eecf6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory: {fileID: 1660682490}
   weapons:
   - {fileID: 11400000, guid: 3a97d00eca749344eb85a5bbd5e67579, type: 2}
   - {fileID: 11400000, guid: 6e980679867599848bed51b1459f279e, type: 2}
-  scopes: []
-  mags: []
-  suppressors: []
+  - {fileID: 11400000, guid: c5368fdfce00a554ca52cd8e4d7cbaea, type: 2}
+  - {fileID: 11400000, guid: f12d643db5fd4fe48b86431fc986f6da, type: 2}
+  - {fileID: 11400000, guid: f6a527f5cff7851408f066e735c5eb7f, type: 2}
+  scopes:
+  - {fileID: 11400000, guid: f598b60aed3732b46b41d3159d7891a3, type: 2}
+  - {fileID: 11400000, guid: 71b72dface4fa3c409eb23fc7e1a999a, type: 2}
+  - {fileID: 11400000, guid: 16e243bc854cc8643b7e4f918a194f64, type: 2}
+  mags:
+  - {fileID: 11400000, guid: 287d519b51f50b24c8e57c9baaee6e55, type: 2}
+  - {fileID: 11400000, guid: 862af760571294e4397de14a8339a762, type: 2}
+  - {fileID: 11400000, guid: 86bd3df98b3f41f4c902ee6047cba9e9, type: 2}
+  - {fileID: 11400000, guid: 516362d882450e94ea2b22f9f5d266f7, type: 2}
+  suppressors:
+  - {fileID: 11400000, guid: b614ff701456b2c4bb0d35101003d404, type: 2}
+  - {fileID: 11400000, guid: 83ee42c24bb7e9a4791ba18c9da817fd, type: 2}
   bodyTab: {fileID: 952375056}
   scopeTab: {fileID: 1128655801}
   suppressorTab: {fileID: 204782438}
@@ -1021,7 +1034,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -300, y: 70}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &746771565
@@ -1628,7 +1641,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -300, y: 70}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &963194225
@@ -1730,6 +1743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1261e43b439df46862faca3e97239e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCursorLocked: 0
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2009,7 +2023,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -300, y: 70}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1158275875
@@ -2129,7 +2143,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1237233341}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 506415260}
+        m_TargetAssemblyTypeName: InventoryUI, Assembly-CSharp
+        m_MethodName: EnableSuppressorTab
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1237233341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2910,7 +2936,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1397442609}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 506415260}
+        m_TargetAssemblyTypeName: InventoryUI, Assembly-CSharp
+        m_MethodName: EnableMagTab
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1397442609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3737,22 +3775,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ab2e3bd73cf1c40bfbbb3b0756d8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapons:
-  - {fileID: 11400000, guid: 3a97d00eca749344eb85a5bbd5e67579, type: 2}
-  - {fileID: 11400000, guid: c5368fdfce00a554ca52cd8e4d7cbaea, type: 2}
-  - {fileID: 11400000, guid: f6a527f5cff7851408f066e735c5eb7f, type: 2}
-  scopes:
-  - {fileID: 11400000, guid: f598b60aed3732b46b41d3159d7891a3, type: 2}
-  - {fileID: 11400000, guid: 16e243bc854cc8643b7e4f918a194f64, type: 2}
-  - {fileID: 11400000, guid: 71b72dface4fa3c409eb23fc7e1a999a, type: 2}
-  mags:
-  - {fileID: 11400000, guid: 862af760571294e4397de14a8339a762, type: 2}
-  - {fileID: 11400000, guid: 287d519b51f50b24c8e57c9baaee6e55, type: 2}
-  - {fileID: 11400000, guid: 86bd3df98b3f41f4c902ee6047cba9e9, type: 2}
-  suppressors:
-  - {fileID: 11400000, guid: 83ee42c24bb7e9a4791ba18c9da817fd, type: 2}
-  - {fileID: 11400000, guid: b614ff701456b2c4bb0d35101003d404, type: 2}
-  - {fileID: 0}
   scope: {fileID: 1484921430}
   suppressor: {fileID: 1832005390}
   body: {fileID: 1534203230}
@@ -3774,6 +3796,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryCanvas: {fileID: 506415255}
+  weapons:
+  - {fileID: 11400000, guid: 3a97d00eca749344eb85a5bbd5e67579, type: 2}
+  - {fileID: 11400000, guid: 6e980679867599848bed51b1459f279e, type: 2}
+  - {fileID: 11400000, guid: c5368fdfce00a554ca52cd8e4d7cbaea, type: 2}
+  - {fileID: 11400000, guid: f12d643db5fd4fe48b86431fc986f6da, type: 2}
+  - {fileID: 11400000, guid: f6a527f5cff7851408f066e735c5eb7f, type: 2}
+  scopes:
+  - {fileID: 11400000, guid: f598b60aed3732b46b41d3159d7891a3, type: 2}
+  - {fileID: 11400000, guid: 71b72dface4fa3c409eb23fc7e1a999a, type: 2}
+  mags: []
+  suppressors: []
+  playerWeapons:
+  - {fileID: 11400000, guid: 3a97d00eca749344eb85a5bbd5e67579, type: 2}
+  - {fileID: 11400000, guid: f6a527f5cff7851408f066e735c5eb7f, type: 2}
+  playerScopes:
+  - {fileID: 11400000, guid: f598b60aed3732b46b41d3159d7891a3, type: 2}
+  - {fileID: 11400000, guid: 71b72dface4fa3c409eb23fc7e1a999a, type: 2}
+  playerMags:
+  - {fileID: 11400000, guid: 516362d882450e94ea2b22f9f5d266f7, type: 2}
+  - {fileID: 11400000, guid: 86bd3df98b3f41f4c902ee6047cba9e9, type: 2}
+  playerSuppressors:
+  - {fileID: 11400000, guid: 83ee42c24bb7e9a4791ba18c9da817fd, type: 2}
+  - {fileID: 0}
 --- !u!1 &1667569112
 GameObject:
   m_ObjectHideFlags: 0
@@ -3933,7 +3978,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1702944811}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 506415260}
+        m_TargetAssemblyTypeName: InventoryUI, Assembly-CSharp
+        m_MethodName: EnableBodyTab
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1702944811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9155,7 +9212,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1987226102}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 506415260}
+        m_TargetAssemblyTypeName: InventoryUI, Assembly-CSharp
+        m_MethodName: EnableScopeTab
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1987226102
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,6 +13,18 @@ public class Inventory : MonoBehaviour
     private bool isInventory = false;
     private bool canSwitch = true;
 
+    [SerializeField] List<GunObject> weapons = new List<GunObject>();
+    [SerializeField] List<Scope> scopes = new List<Scope>();
+    [SerializeField] List<Magazine> mags = new List<Magazine>();
+    [SerializeField] List<Suppressor> suppressors = new List<Suppressor>();
+
+    public List<GunObject> playerWeapons = new List<GunObject>();
+    public List<Scope> playerScopes = new List<Scope>();
+    public List<Magazine> playerMags = new List<Magazine>();
+    public List<Suppressor> playerSuppressors = new List<Suppressor>();
+
+    private int weaponIndex;
+
     void Start(){
         playerInput = GetComponentInParent<PlayerInput>();
         inventoryAction = playerInput.actions["inventory"];
@@ -32,10 +44,12 @@ public class Inventory : MonoBehaviour
         }
 
         if(isInventory){
+            GetComponentInParent<CursorScript>().isCursorLocked = false;
             GetComponentInParent<Player>().enabled = false;
             GetComponent<Gun>().enabled = false;
             inventoryCanvas.SetActive(true);
         }else{
+            GetComponentInParent<CursorScript>().isCursorLocked = true;
             GetComponentInParent<Player>().enabled = true;
             GetComponent<Gun>().enabled = true;
             inventoryCanvas.SetActive(false);
@@ -55,6 +69,19 @@ public class Inventory : MonoBehaviour
         }else{
             return false;
         }
+    }
+
+    public void SetWeapon1(){
+        weaponIndex = 0;
+    }
+
+    public void SetWeapon2(){
+        weaponIndex = 1;
+    }
+
+    public void ChangeBody(int index){
+        Debug.Log(index);
+        playerWeapons[weaponIndex] = weapons[index];
     }
 
 }

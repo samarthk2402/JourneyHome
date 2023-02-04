@@ -6,10 +6,7 @@ using TMPro;
 
 public class Gun : MonoBehaviour
 {
-    [SerializeField] List<GunObject> weapons = new List<GunObject>();
-    [SerializeField] List<Scope> scopes = new List<Scope>();
-    [SerializeField] List<Magazine> mags = new List<Magazine>();
-    [SerializeField] List<Suppressor> suppressors = new List<Suppressor>();
+    private Inventory inventory; 
     public GameObject scope;
     public GameObject suppressor;
     public Transform body;
@@ -38,6 +35,7 @@ public class Gun : MonoBehaviour
     private float zoomMultiplier;
 
     void Awake(){
+        inventory = GetComponent<Inventory>();
         playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["fire"];
         reloadAction = playerInput.actions["reload"];
@@ -50,8 +48,8 @@ public class Gun : MonoBehaviour
         startFOV = 60;
         camFOV = GetComponentInParent<CameraFOV>();
 
-        for(int i = 0; i < weapons.Count; i++){
-            ammo.Add(mags[i].maxAmmo);
+        for(int i = 0; i < inventory.playerWeapons.Count; i++){
+            ammo.Add(inventory.playerMags[i].maxAmmo);
         }
 
         SwitchWeapon(weaponIndex);
@@ -67,12 +65,12 @@ public class Gun : MonoBehaviour
             ammoText.text = "Ammo: " + ammo[weaponIndex].ToString();
         }
 
-        gunMeshFilter.mesh = weapons[weaponIndex].weaponMesh;
+        gunMeshFilter.mesh =inventory.playerWeapons[weaponIndex].weaponMesh;
         
         try{
             scope.SetActive(true);
-            scopeMeshFilter.mesh = scopes[weaponIndex].scopeMesh;
-            zoomMultiplier = scopes[weaponIndex].zoomMultiplier;
+            scopeMeshFilter.mesh = inventory.playerScopes[weaponIndex].scopeMesh;
+            zoomMultiplier = inventory.playerScopes[weaponIndex].zoomMultiplier;
         }
         catch{
             scope.SetActive(false);
@@ -81,7 +79,7 @@ public class Gun : MonoBehaviour
 
         try{
             suppressor.SetActive(true);
-            suppressorMeshFilter.mesh = suppressors[weaponIndex].suppressorMesh;
+            suppressorMeshFilter.mesh = inventory.playerSuppressors[weaponIndex].suppressorMesh;
         }
         catch{
             suppressor.SetActive(false);
@@ -94,7 +92,7 @@ public class Gun : MonoBehaviour
                 isReloading = false;
             }
 
-            if (weaponIndex < weapons.Count-1){
+            if (weaponIndex < inventory.playerWeapons.Count-1){
                 weaponIndex += 1;
             }else{
                 weaponIndex = 0;
@@ -112,7 +110,7 @@ public class Gun : MonoBehaviour
             if (weaponIndex > 0){
                 weaponIndex -= 1;
             }else{
-                weaponIndex = weapons.Count-1;
+                weaponIndex = inventory.playerWeapons.Count-1;
             }  
 
             SwitchWeapon(weaponIndex);         
@@ -121,13 +119,13 @@ public class Gun : MonoBehaviour
     }
 
     void SwitchWeapon(int weaponIndex){
-        bool isSuppressor = suppressors[weaponIndex] != null;
-        var bodyOffset = new Vector3(weapons[weaponIndex].xOffset, weapons[weaponIndex].yOffset, 1);
+        bool isSuppressor = inventory.playerSuppressors[weaponIndex] != null;
+        var bodyOffset = new Vector3(inventory.playerWeapons[weaponIndex].xOffset, inventory.playerWeapons[weaponIndex].yOffset, 1);
         body.localPosition = bodyOffset;
 
-        if (suppressors[weaponIndex] != null){
-            suppressor.transform.localPosition = weapons[weaponIndex].suppressorPos;
-            suppressor.transform.localScale = new Vector3(suppressors[weaponIndex].size, 0.1f, suppressors[weaponIndex].size);
+        if (inventory.playerSuppressors[weaponIndex] != null){
+            suppressor.transform.localPosition = inventory.playerWeapons[weaponIndex].suppressorPos;
+            suppressor.transform.localScale = new Vector3(inventory.playerSuppressors[weaponIndex].size, 0.1f, inventory.playerSuppressors[weaponIndex].size);
         }
     }
     
@@ -141,9 +139,9 @@ public class Gun : MonoBehaviour
         if (shootInput>0 && Time.time >= nextTimeToFire && canShoot && !isReloading)
         {
             if (ammo[weaponIndex]>0){
-                nextTimeToFire = Time.time + 1f / weapons[weaponIndex].fireRate;
+                nextTimeToFire = Time.time + 1f / inventory.playerWeapons[weaponIndex].fireRate;
                 Shoot();
-                if (!weapons[weaponIndex].autoFire){
+                if (!inventory.playerWeapons[weaponIndex].autoFire){
                     canShoot = false;
                     StartCoroutine(waitForKeyRelease());
                 }
@@ -155,7 +153,7 @@ public class Gun : MonoBehaviour
 
         }
 
-        if (reloadInput>0 && ammo[weaponIndex]<mags[weaponIndex].maxAmmo && !isReloading){
+        if (reloadInput>0 && ammo[weaponIndex]<inventory.playerMags[weaponIndex].maxAmmo && !isReloading){
             isReloading = true;
             reload = Reload();
             StartCoroutine(reload);
@@ -176,9 +174,9 @@ public class Gun : MonoBehaviour
 
     private IEnumerator Reload()
     {
-        yield return new WaitForSeconds(mags[weaponIndex].reloadSpeed);
+        yield return new WaitForSeconds(inventory.playerMags[weaponIndex].reloadSpeed);
         isReloading = false;
-        ammo[weaponIndex] = mags[weaponIndex].maxAmmo;
+        ammo[weaponIndex] = inventory.playerMags[weaponIndex].maxAmmo;
     }
 
     public IEnumerator waitForKeyRelease()
@@ -199,37 +197,37 @@ public class Gun : MonoBehaviour
     {
         ammo[weaponIndex] -= 1;
 
-        if(mags[weaponIndex].shootParticleSystem != null){
+        if(inventory.playerMags[weaponIndex].shootParticleSystem != null){
             Vector3 particleOffset = new Vector3(0f, 0f, 0.1f);
-            ParticleSystem muzzleFlash = Instantiate(mags[weaponIndex].shootParticleSystem, weapons[weaponIndex].suppressorPos, transform.rotation, body);
-            muzzleFlash.transform.localPosition = weapons[weaponIndex].suppressorPos;
+            ParticleSystem muzzleFlash = Instantiate(inventory.playerMags[weaponIndex].shootParticleSystem, inventory.playerWeapons[weaponIndex].suppressorPos, transform.rotation, body);
+            muzzleFlash.transform.localPosition = inventory.playerWeapons[weaponIndex].suppressorPos;
             muzzleFlash.Play();
-            StartCoroutine(DestroyAfterSeconds(mags[weaponIndex].psTime, muzzleFlash.gameObject));
+            StartCoroutine(DestroyAfterSeconds(inventory.playerMags[weaponIndex].psTime, muzzleFlash.gameObject));
         }
 
-        if(mags[weaponIndex].lineRenderer != null){
-                Vector3 endPoint = new Vector3(0, 0, weapons[weaponIndex].range);
-                LineRenderer lr = Instantiate(mags[weaponIndex].lineRenderer, weapons[weaponIndex].suppressorPos, transform.rotation, body);
-                lr.transform.localPosition =  weapons[weaponIndex].suppressorPos;
+        if(inventory.playerMags[weaponIndex].lineRenderer != null){
+                Vector3 endPoint = new Vector3(0, 0, inventory.playerWeapons[weaponIndex].range);
+                LineRenderer lr = Instantiate(inventory.playerMags[weaponIndex].lineRenderer, inventory.playerWeapons[weaponIndex].suppressorPos, transform.rotation, body);
+                lr.transform.localPosition =  inventory.playerWeapons[weaponIndex].suppressorPos;
                 lr.SetPosition(1, lr.transform.localPosition + endPoint);
-                StartCoroutine(DestroyAfterSeconds(mags[weaponIndex].psTime, lr.gameObject));
+                StartCoroutine(DestroyAfterSeconds(inventory.playerMags[weaponIndex].psTime, lr.gameObject));
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, weapons[weaponIndex].range))
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, inventory.playerWeapons[weaponIndex].range))
         {
 
             Target target = hit.transform.GetComponent<Target>();
             if (target != null)
             {
-                if(mags[weaponIndex].damageOverTime){
-                    IEnumerator takedot =  target.TakeDamageOverTime(mags[weaponIndex].damage, mags[weaponIndex].hit_num);
+                if(inventory.playerMags[weaponIndex].damageOverTime){
+                    IEnumerator takedot =  target.TakeDamageOverTime(inventory.playerMags[weaponIndex].damage,inventory.playerMags[weaponIndex].hit_num);
                     StartCoroutine(takedot);
-                    if(target.currentHealth-mags[weaponIndex].damage<=0){
+                    if(target.currentHealth-inventory.playerMags[weaponIndex].damage<=0){
                         Destroy(target.gameObject);
                     }
                 }else{
-                    target.TakeDamage(mags[weaponIndex].damage);
+                    target.TakeDamage(inventory.playerMags[weaponIndex].damage);
                 }
             }
 
