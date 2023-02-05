@@ -13,10 +13,10 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] List<Magazine> mags = new List<Magazine>();
     [SerializeField] List<Suppressor> suppressors = new List<Suppressor>();
 
-    private List<GameObject> bodyButtons = new List<GameObject>();
-    private List<GameObject> scopeButtons = new List<GameObject>();
-    private List<GameObject> suppressorButtons = new List<GameObject>();
-    private List<GameObject> magButtons = new List<GameObject>();
+    private Dictionary<GameObject, int> bodyButtons = new Dictionary<GameObject, int>();
+    private Dictionary<GameObject, int> scopeButtons = new Dictionary<GameObject, int>();
+    private Dictionary<GameObject, int> magButtons = new Dictionary<GameObject, int>();
+    private Dictionary<GameObject, int> suppressorButtons = new Dictionary<GameObject, int>();
 
     [SerializeField] GameObject bodyTab;
     [SerializeField] GameObject scopeTab;
@@ -25,13 +25,13 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] GameObject attachmentButton;
 
-    void OnEnable(){
+    void Start(){
         for(int i=0; i<weapons.Count; i++){
             var button = Instantiate(attachmentButton, new Vector3(0, -(i*20), 0), Quaternion.identity, bodyTab.transform);
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
             name.text = weapons[i].name;
-            bodyButtons.Add(button);
+            bodyButtons.Add(button, i);
         }
 
         for(int i=0; i<scopes.Count; i++){
@@ -40,6 +40,7 @@ public class InventoryUI : MonoBehaviour
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
             name.text = scopes[i].name;
+            scopeButtons.Add(button, i);
         }
 
         for(int i=0; i<mags.Count; i++){
@@ -48,6 +49,7 @@ public class InventoryUI : MonoBehaviour
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
             name.text = mags[i].name;
+            magButtons.Add(button, i);
         }
 
         for(int i=0; i<suppressors.Count; i++){
@@ -56,16 +58,29 @@ public class InventoryUI : MonoBehaviour
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
             name.text = suppressors[i].name;
+            suppressorButtons.Add(button, i);
         }
 
-        for (int i = 0; i<bodyButtons.Count; i++){
-                Debug.Log(i);
-                bodyButtons[i].GetComponent<Button>().onClick.AddListener(() => inventory.ChangeBody(i-1));
+        foreach (KeyValuePair<GameObject, int> button in bodyButtons)
+        {
+            button.Key.GetComponent<Button>().onClick.AddListener(() => inventory.ChangeBody(button.Value));
         }
-    }
 
-    void OnDisable(){
-        bodyButtons = new List<GameObject>();
+        foreach (KeyValuePair<GameObject, int> button in scopeButtons)
+        {
+            button.Key.GetComponent<Button>().onClick.AddListener(() => inventory.ChangeScope(button.Value));
+        }
+
+        foreach (KeyValuePair<GameObject, int> button in suppressorButtons)
+        {
+            button.Key.GetComponent<Button>().onClick.AddListener(() => inventory.ChangeSuppressor(button.Value));
+        }
+
+        foreach (KeyValuePair<GameObject, int> button in magButtons)
+        {
+            button.Key.GetComponent<Button>().onClick.AddListener(() => inventory.ChangeMag(button.Value));
+        }
+
     }
 
     public void EnableBodyTab(){

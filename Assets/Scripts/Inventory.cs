@@ -23,9 +23,9 @@ public class Inventory : MonoBehaviour
     public List<Magazine> playerMags = new List<Magazine>();
     public List<Suppressor> playerSuppressors = new List<Suppressor>();
 
-    private int weaponIndex;
+    public int weaponIndex;
 
-    void Start(){
+    void Awake(){
         playerInput = GetComponentInParent<PlayerInput>();
         inventoryAction = playerInput.actions["inventory"];
     }
@@ -71,17 +71,28 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void SetWeapon1(){
-        weaponIndex = 0;
-    }
-
-    public void SetWeapon2(){
-        weaponIndex = 1;
+    public void SetWeaponIndex(int index){
+        weaponIndex = index;
+        // GetComponent<Gun>().SwitchWeapon(weaponIndex);
     }
 
     public void ChangeBody(int index){
-        Debug.Log(index);
         playerWeapons[weaponIndex] = weapons[index];
+        
+    }
+
+    public void ChangeScope(int index){
+        playerScopes[weaponIndex] = scopes[index];
+        
+    }
+
+    public void ChangeMag(int index){
+        playerMags[weaponIndex] = mags[index];
+     
+    }
+
+    public void ChangeSuppressor(int index){
+        playerSuppressors[weaponIndex] = suppressors[index];
     }
 
 }

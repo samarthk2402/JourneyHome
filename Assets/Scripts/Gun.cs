@@ -29,7 +29,7 @@ public class Gun : MonoBehaviour
     private bool canShoot = true;
     private bool isReloading = false;
     private List<int> ammo = new List<int>();
-    private int weaponIndex = 0;
+    public int weaponIndex = 0;
     private IEnumerator reload = null;
     private float startFOV;
     private float zoomMultiplier;
@@ -118,7 +118,7 @@ public class Gun : MonoBehaviour
 
     }
 
-    void SwitchWeapon(int weaponIndex){
+    public void SwitchWeapon(int weaponIndex){
         bool isSuppressor = inventory.playerSuppressors[weaponIndex] != null;
         var bodyOffset = new Vector3(inventory.playerWeapons[weaponIndex].xOffset, inventory.playerWeapons[weaponIndex].yOffset, 1);
         body.localPosition = bodyOffset;
@@ -135,6 +135,8 @@ public class Gun : MonoBehaviour
         var shootInput = shootAction.ReadValue<float>();
         var reloadInput = reloadAction.ReadValue<float>();
         var zoomInput = zoomAction.ReadValue<float>();
+
+        SwitchWeapon(weaponIndex); 
 
         if (shootInput>0 && Time.time >= nextTimeToFire && canShoot && !isReloading)
         {
