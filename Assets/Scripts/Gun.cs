@@ -6,7 +6,7 @@ using TMPro;
 
 public class Gun : MonoBehaviour
 {
-    private Inventory inventory; 
+    public Inventory inventory; 
     public GameObject scope;
     public GameObject suppressor;
     public Transform body;

@@ -81,6 +81,7 @@ public class InventoryUI : MonoBehaviour
             button.Key.GetComponent<Button>().onClick.AddListener(() => inventory.ChangeMag(button.Value));
         }
 
+        EnableBodyTab();
     }
 
     public void EnableBodyTab(){
@@ -102,6 +103,7 @@ public class InventoryUI : MonoBehaviour
         scopeTab.SetActive(false);
         suppressorTab.SetActive(true);
         magTab.SetActive(false);
+        Debug.Log("Suppressor");
     }
 
     public void EnableMagTab(){
@@ -109,6 +111,7 @@ public class InventoryUI : MonoBehaviour
         scopeTab.SetActive(false);
         suppressorTab.SetActive(false);
         magTab.SetActive(true);
+        Debug.Log("Mag");
     }
 
 }
