@@ -414,6 +414,7 @@ GameObject:
   - component: {fileID: 286103185994435339}
   - component: {fileID: 286103185994435338}
   - component: {fileID: 286103185994435349}
+  - component: {fileID: -2250801099799879259}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -514,5 +515,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  currentHealth: 0
   healthBar: {fileID: 286103184890216251}
   canvas: {fileID: 286103184568434597}
+--- !u!114 &-2250801099799879259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286103185994435348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094f4c5ff11f7114480a7cc31e428777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

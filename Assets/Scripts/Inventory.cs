@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class Inventory : MonoBehaviour
 {
     [SerializeField] GameObject inventoryCanvas;
+    [SerializeField] GameObject HUDCanvas;
 
     PlayerInput playerInput;
     InputAction inventoryAction;
@@ -48,11 +49,13 @@ public class Inventory : MonoBehaviour
             GetComponentInParent<Player>().enabled = false;
             GetComponent<Gun>().enabled = false;
             inventoryCanvas.SetActive(true);
+            HUDCanvas.SetActive(false);
         }else{
             GetComponentInParent<CursorScript>().isCursorLocked = true;
             GetComponentInParent<Player>().enabled = true;
             GetComponent<Gun>().enabled = true;
             inventoryCanvas.SetActive(false);
+            HUDCanvas.SetActive(true);
         }
     }
 

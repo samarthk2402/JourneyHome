@@ -30,7 +30,11 @@ public class InventoryUI : MonoBehaviour
             var button = Instantiate(attachmentButton, new Vector3(0, -(i*20), 0), Quaternion.identity, bodyTab.transform);
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
-            name.text = weapons[i].name;
+            if(weapons[i] != null){
+                name.text = weapons[i].name;
+            }else{
+                name.text = "None";
+            }
             bodyButtons.Add(button, i);
         }
 
@@ -39,7 +43,11 @@ public class InventoryUI : MonoBehaviour
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
-            name.text = scopes[i].name;
+            if(scopes[i] != null){
+                name.text = scopes[i].name;
+            }else{
+                name.text = "None";
+            }
             scopeButtons.Add(button, i);
         }
 
@@ -48,7 +56,11 @@ public class InventoryUI : MonoBehaviour
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
-            name.text = mags[i].name;
+            if(mags[i] != null){
+                name.text = mags[i].name;
+            }else{
+                name.text = "None";
+            }
             magButtons.Add(button, i);
         }
 
@@ -57,7 +69,11 @@ public class InventoryUI : MonoBehaviour
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             button.transform.localPosition = new Vector3(0, -(i*30), 0);
             var name = button.GetComponentInChildren<TMP_Text>();
-            name.text = suppressors[i].name;
+            if(suppressors[i] != null){
+                name.text = suppressors[i].name;
+            }else{
+                name.text = "None";
+            }
             suppressorButtons.Add(button, i);
         }
 
@@ -103,7 +119,6 @@ public class InventoryUI : MonoBehaviour
         scopeTab.SetActive(false);
         suppressorTab.SetActive(true);
         magTab.SetActive(false);
-        Debug.Log("Suppressor");
     }
 
     public void EnableMagTab(){
@@ -111,7 +126,6 @@ public class InventoryUI : MonoBehaviour
         scopeTab.SetActive(false);
         suppressorTab.SetActive(false);
         magTab.SetActive(true);
-        Debug.Log("Mag");
     }
 
 }
