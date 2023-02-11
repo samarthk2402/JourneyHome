@@ -24,6 +24,8 @@ public class EnemyAI : MonoBehaviour
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
+    public ParticleSystem ps;
+
     private void Awake(){
         player = GameObject.Find("Player");
         playerTarget = player.GetComponent<PlayerTarget>();
@@ -75,13 +77,19 @@ public class EnemyAI : MonoBehaviour
     private void Attacking(){
         //Make sure enemy doesn't move
         agent.SetDestination(transform.position);
-        transform.LookAt(player.transform);
+        var lookPos = player.transform.position;
+        lookPos.y = transform.position.y;
+        transform.LookAt(lookPos);
 
         if(!alreadyAttacked){
             //Attack
-            playerTarget.TakeDamage(damage);
-            alreadyAttacked = true;
-            StartCoroutine(resetAttack());
+            ps.Play();
+
+            if(Physics.Raycast(transform.position, player.transform.position, out RaycastHit hit, attackRange)){
+                playerTarget.TakeDamage(damage);
+                alreadyAttacked = true;
+                StartCoroutine(resetAttack());
+            }
         }
     }
 
