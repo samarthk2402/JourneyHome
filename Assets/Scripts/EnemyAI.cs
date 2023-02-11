@@ -6,7 +6,8 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     public NavMeshAgent agent;
-    public Transform player;
+    public GameObject player;
+    public PlayerTarget playerTarget;
     public LayerMask whatIsGround, whatIsPlayer;
 
     //Patrolling
@@ -16,6 +17,7 @@ public class EnemyAI : MonoBehaviour
 
     //Attacking
     public float timeBetweenAttacks;
+    public float damage = 10;
     bool alreadyAttacked;
 
     //States 
@@ -23,7 +25,8 @@ public class EnemyAI : MonoBehaviour
     public bool playerInSightRange, playerInAttackRange;
 
     private void Awake(){
-        player = GameObject.Find("Player").transform;
+        player = GameObject.Find("Player");
+        playerTarget = player.GetComponent<PlayerTarget>();
         agent = GetComponent<NavMeshAgent>();
 
     }
@@ -51,8 +54,6 @@ public class EnemyAI : MonoBehaviour
         if(distToWalkPoint.magnitude < 1){
             walkPointSet = false;
         }
-
-        Debug.Log("Patroling");
     }
 
     private void SearchWalkPoint(){
@@ -68,27 +69,25 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void Chasing(){
-        agent.SetDestination(player.position);
-        Debug.Log("Chasing");
+        agent.SetDestination(player.transform.position);
     }
 
     private void Attacking(){
         //Make sure enemy doesn't move
         agent.SetDestination(transform.position);
-        transform.LookAt(player);
+        transform.LookAt(player.transform);
 
         if(!alreadyAttacked){
             //Attack
-
+            playerTarget.TakeDamage(damage);
             alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+            StartCoroutine(resetAttack());
         }
-
-        Debug.Log("Attacking");
     }
 
-    private void ResetAttack(){
-
+    private IEnumerator resetAttack(){
+        yield return new WaitForSeconds(timeBetweenAttacks);
+        alreadyAttacked = false;
     }
 
 }
