@@ -8,6 +8,7 @@ public class EnemyAI : MonoBehaviour
     public NavMeshAgent agent;
     public GameObject player;
     public PlayerTarget playerTarget;
+    private Player playerMove;
     public LayerMask whatIsGround, whatIsPlayer;
 
     //Patrolling
@@ -29,6 +30,7 @@ public class EnemyAI : MonoBehaviour
     private void Awake(){
         player = GameObject.Find("Player");
         playerTarget = player.GetComponent<PlayerTarget>();
+        playerMove = player.GetComponent<Player>();
         agent = GetComponent<NavMeshAgent>();
 
     }
@@ -81,15 +83,17 @@ public class EnemyAI : MonoBehaviour
         lookPos.y = transform.position.y;
         transform.LookAt(lookPos);
 
-        if(!alreadyAttacked){
+        if(!alreadyAttacked && playerMove.controller.isGrounded){
+
             //Attack
             ps.Play();
 
-            if(Physics.Raycast(transform.position, player.transform.position, out RaycastHit hit, attackRange)){
+            if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, attackRange)){
                 playerTarget.TakeDamage(damage);
                 alreadyAttacked = true;
-                StartCoroutine(resetAttack());
             }
+
+            StartCoroutine(resetAttack());
         }
     }
 
