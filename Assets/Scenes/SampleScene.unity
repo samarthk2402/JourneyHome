@@ -743,7 +743,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &506415256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1942,7 +1942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &905803236
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2767,6 +2767,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7071941300921542341, guid: c7eb0ca7a7223154ca73bf9fa30f604f, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 11400000, guid: 466233cd8d7f22c4fb951f97d0239c4a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7eb0ca7a7223154ca73bf9fa30f604f, type: 3}
 --- !u!1 &1348322099
@@ -3762,11 +3766,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 931c4fdbdd12c3647aa4a823611515d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 500
   currentHealth: 0
   healthBar: {fileID: 1775619986}
   canvas: {fileID: 663659171}
   damagePanel: {fileID: 905803235}
+  healDelay: 3
+  healSpeed: 3
 --- !u!1 &1534203229
 GameObject:
   m_ObjectHideFlags: 0
@@ -10335,6 +10341,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7071941300921542341, guid: c7eb0ca7a7223154ca73bf9fa30f604f, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 11400000, guid: 466233cd8d7f22c4fb951f97d0239c4a, type: 2}
     - target: {fileID: 7071941300921542341, guid: c7eb0ca7a7223154ca73bf9fa30f604f, type: 3}
       propertyPath: player
       value: 

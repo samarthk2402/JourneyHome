@@ -11,6 +11,13 @@ public class PlayerTarget : MonoBehaviour
     public GameObject canvas;
     public GameObject damagePanel;
 
+    public float healDelay; 
+    public float healSpeed;
+    private bool canHeal = false;
+    IEnumerator waitToHeal;
+    private bool takingDamage = false;
+    private bool isWaitingToHeal = false;
+
     private bool canShowDamage = true;
     IEnumerator showDamage;
 
@@ -20,10 +27,33 @@ public class PlayerTarget : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         damagePanel.SetActive(false);
+        canHeal = false;
+    }
+
+    void Update(){
+        if(canHeal){
+            Heal();
+        }
+
+        if(!isWaitingToHeal && currentHealth<maxHealth){
+            StartCoroutine(WaitToHeal());
+        }
+
+        // if(currentHealth<maxHealth){
+        //     waitToHeal = WaitToHeal();
+        //     StartCoroutine(waitToHeal);
+
+        //     if(canShowDamage){
+        //         StopCoroutine(waitToHeal);
+        //         canHeal = false;
+        //     }
+        // }
     }
 
     public void TakeDamage(float damage)
     {
+        takingDamage = true;
+
         currentHealth -= damage;
         
         if (canShowDamage){
@@ -36,6 +66,24 @@ public class PlayerTarget : MonoBehaviour
         }
 
         UpdateHealthBar();
+        takingDamage = false;
+    }
+
+    IEnumerator WaitToHeal(){
+        canHeal = false;
+        isWaitingToHeal = true;
+        yield return new WaitForSeconds(healDelay);
+        isWaitingToHeal = false;
+        canHeal = true;
+    }
+
+    private void Heal(){
+        while(maxHealth-currentHealth>maxHealth/healSpeed){
+            currentHealth += maxHealth/healSpeed; 
+            UpdateHealthBar();
+        }
+
+        canHeal = false;
     }
 
     // public IEnumerator TakeDamageOverTime(float damage, float hit_num){

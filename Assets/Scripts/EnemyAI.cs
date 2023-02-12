@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
+    public EnemyType enemy;
     public NavMeshAgent agent;
     public GameObject player;
     public PlayerTarget playerTarget;
@@ -14,31 +15,25 @@ public class EnemyAI : MonoBehaviour
     //Patrolling
     public Vector3 walkPoint;
     bool walkPointSet;
-    public float walkPointRange;
 
     //Attacking
-    public float timeBetweenAttacks;
-    public float damage = 10;
     bool alreadyAttacked;
 
     //States 
-    public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
-
-    public ParticleSystem ps;
 
     private void Awake(){
         player = GameObject.Find("Player");
         playerTarget = player.GetComponent<PlayerTarget>();
         playerMove = player.GetComponent<Player>();
         agent = GetComponent<NavMeshAgent>();
-
+        agent.speed = enemy.speed;
     }
 
     private void Update(){
         //Check for sight and attack range
-        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer); 
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer); 
+        playerInSightRange = Physics.CheckSphere(transform.position, enemy.sightRange, whatIsPlayer); 
+        playerInAttackRange = Physics.CheckSphere(transform.position, enemy.attackRange, whatIsPlayer); 
 
         if(!playerInSightRange && !playerInAttackRange) Patroling();
         if(playerInSightRange && !playerInAttackRange) Chasing();
@@ -62,8 +57,8 @@ public class EnemyAI : MonoBehaviour
 
     private void SearchWalkPoint(){
         //Calculate random point in range
-        float randomZ = Random.Range(-walkPointRange, walkPointRange);
-        float randomX = Random.Range(-walkPointRange, walkPointRange);
+        float randomZ = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
+        float randomX = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
 
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
@@ -86,10 +81,10 @@ public class EnemyAI : MonoBehaviour
         if(!alreadyAttacked && playerMove.controller.isGrounded){
 
             //Attack
-            ps.Play();
+            enemy.ps.Play();
 
-            if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, attackRange)){
-                playerTarget.TakeDamage(damage);
+            if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, enemy.attackRange)){
+                playerTarget.TakeDamage(enemy.damage);
                 alreadyAttacked = true;
             }
 
@@ -98,7 +93,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     private IEnumerator resetAttack(){
-        yield return new WaitForSeconds(timeBetweenAttacks);
+        yield return new WaitForSeconds(enemy.timeBetweenAttacks);
         alreadyAttacked = false;
     }
 
