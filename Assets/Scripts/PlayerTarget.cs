@@ -13,13 +13,13 @@ public class PlayerTarget : MonoBehaviour
 
     public float healDelay; 
     public float healSpeed;
-    private bool canHeal = false;
-    IEnumerator waitToHeal;
-    private bool takingDamage = false;
-    private bool isWaitingToHeal = false;
+    public float waitToHealTime;
+    private bool canHeal;
 
     private bool canShowDamage = true;
     IEnumerator showDamage;
+    private float lastTakenDamage;
+    private float timePassed;
 
     void Start()
     {
@@ -27,17 +27,16 @@ public class PlayerTarget : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         damagePanel.SetActive(false);
-        canHeal = false;
+        canHeal = true;
     }
 
     void Update(){
-        if(canHeal){
+
+        if(timePassed-lastTakenDamage>=waitToHealTime){
             Heal();
         }
 
-        if(!isWaitingToHeal && currentHealth<maxHealth){
-            StartCoroutine(WaitToHeal());
-        }
+        timePassed += Time.deltaTime;
 
         // if(currentHealth<maxHealth){
         //     waitToHeal = WaitToHeal();
@@ -52,7 +51,6 @@ public class PlayerTarget : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        takingDamage = true;
 
         currentHealth -= damage;
         
@@ -66,24 +64,17 @@ public class PlayerTarget : MonoBehaviour
         }
 
         UpdateHealthBar();
-        takingDamage = false;
-    }
-
-    IEnumerator WaitToHeal(){
-        canHeal = false;
-        isWaitingToHeal = true;
-        yield return new WaitForSeconds(healDelay);
-        isWaitingToHeal = false;
-        canHeal = true;
+        lastTakenDamage = timePassed;
     }
 
     private void Heal(){
-        while(maxHealth-currentHealth>maxHealth/healSpeed){
-            currentHealth += maxHealth/healSpeed; 
-            UpdateHealthBar();
-        }
-
-        canHeal = false;
+        //while(currentHealth<maxHealth){
+            if(canHeal && currentHealth<maxHealth){
+                currentHealth += healSpeed;
+                UpdateHealthBar();
+                StartCoroutine(HealSpeedDelay());
+            }
+        //}
     }
 
     // public IEnumerator TakeDamageOverTime(float damage, float hit_num){
@@ -95,6 +86,12 @@ public class PlayerTarget : MonoBehaviour
     //         yield return new WaitForSeconds(0.5f);
     //     }
     // }
+
+    IEnumerator HealSpeedDelay(){
+        canHeal = false;
+        yield return new WaitForSeconds(healDelay);
+        canHeal = true;
+    }
 
     IEnumerator ShowDamage(){
         damagePanel.SetActive(true);

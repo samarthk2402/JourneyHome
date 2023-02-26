@@ -3771,8 +3771,9 @@ MonoBehaviour:
   healthBar: {fileID: 1775619986}
   canvas: {fileID: 663659171}
   damagePanel: {fileID: 905803235}
-  healDelay: 3
-  healSpeed: 3
+  healDelay: 0.01
+  healSpeed: 2
+  waitToHealTime: 2
 --- !u!1 &1534203229
 GameObject:
   m_ObjectHideFlags: 0
