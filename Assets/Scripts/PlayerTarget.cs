@@ -67,6 +67,16 @@ public class PlayerTarget : MonoBehaviour
         lastTakenDamage = timePassed;
     }
 
+    public IEnumerator TakeDamageOverTime(float damage, float hit_num){
+        for(int i = 0; i < hit_num+1; i++){
+            if(currentHealth-damage<=0f){
+                yield break;
+            }
+            TakeDamage(damage);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
     private void Heal(){
         //while(currentHealth<maxHealth){
             if(canHeal && currentHealth<maxHealth){

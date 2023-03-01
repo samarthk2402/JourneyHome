@@ -11,4 +11,8 @@ public class EnemyType : ScriptableObject
     public float damage = 10;
     public float sightRange, attackRange;
     public ParticleSystem ps;
+    public float psTime;
+    public LineRenderer lineRenderer;
+    public bool damageOverTime;
+    public int hit_num;
 }

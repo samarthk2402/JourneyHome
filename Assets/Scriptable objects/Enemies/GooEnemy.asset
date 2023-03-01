@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01b1e27756d7a0248b9f4014f54fc552, type: 3}
-  m_Name: DefaultEnemy
+  m_Name: GooEnemy
   m_EditorClassIdentifier: 
   walkPointRange: 5
   speed: 3.5
-  timeBetweenAttacks: 0.5
-  damage: 20
+  timeBetweenAttacks: 0
+  damage: 5
   sightRange: 10
   attackRange: 5
-  ps: {fileID: 773973743051849277, guid: 6c3f2488119338142a57922178d96fa9, type: 3}
-  psTime: 0.2
-  lineRenderer: {fileID: 0}
+  ps: {fileID: 0}
+  psTime: 0.1
+  lineRenderer: {fileID: 3722860134396904958, guid: 04456bfd92eba7942a5f627043dd0cf8, type: 3}

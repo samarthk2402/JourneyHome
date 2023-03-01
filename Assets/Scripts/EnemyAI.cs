@@ -12,6 +12,8 @@ public class EnemyAI : MonoBehaviour
     private Player playerMove;
     public LayerMask whatIsGround, whatIsPlayer;
 
+    public GameObject gun;
+
     //Patrolling
     public Vector3 walkPoint;
     bool walkPointSet;
@@ -81,10 +83,33 @@ public class EnemyAI : MonoBehaviour
         if(!alreadyAttacked && playerMove.controller.isGrounded){
 
             //Attack
-            enemy.ps.Play();
+            if(enemy.ps != null){
+                Vector3 particleOffset = new Vector3(0f, 0f, 0.1f);
+                ParticleSystem muzzleFlash = Instantiate(enemy.ps, gun.transform.position, transform.rotation, transform);
+                muzzleFlash.transform.localPosition = new Vector3(0, 0, 1);
+                muzzleFlash.Play();
+                StartCoroutine(DestroyAfterSeconds(enemy.psTime, muzzleFlash.gameObject));
+            }
+
+            if(enemy.lineRenderer != null){
+                    Vector3 endPoint = new Vector3(0, 0, enemy.attackRange);
+                    LineRenderer lr = Instantiate(enemy.lineRenderer, gun.transform.position, transform.rotation, transform);
+                    lr.transform.localPosition = new Vector3(0, 0, 1);
+                    lr.SetPosition(1, lr.transform.localPosition + endPoint);
+                    StartCoroutine(DestroyAfterSeconds(enemy.psTime, lr.gameObject));
+            }
 
             if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, enemy.attackRange)){
-                playerTarget.TakeDamage(enemy.damage);
+                if(enemy.damageOverTime){
+                    IEnumerator takedot =  playerTarget.TakeDamageOverTime(enemy.damage, enemy.hit_num);
+                    StartCoroutine(takedot);
+                    // if(playerTarget.currentHealth-enemy.damage<=0){
+                    //     Destroy(playerTarget.gameObject);
+                    // }
+                }else{
+                    playerTarget.TakeDamage(enemy.damage);
+                }
+
                 alreadyAttacked = true;
             }
 
@@ -95,6 +120,11 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator resetAttack(){
         yield return new WaitForSeconds(enemy.timeBetweenAttacks);
         alreadyAttacked = false;
+    }
+
+    private IEnumerator DestroyAfterSeconds(float seconds, GameObject muzzleFlash){
+        yield return new WaitForSeconds(seconds);
+        Destroy(muzzleFlash.gameObject);
     }
 
 }
