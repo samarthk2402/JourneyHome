@@ -26,6 +26,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Awake(){
         player = GameObject.Find("Player");
+        gun = transform.GetChild(1).gameObject;
         playerTarget = player.GetComponent<PlayerTarget>();
         playerMove = player.GetComponent<Player>();
         agent = GetComponent<NavMeshAgent>();
@@ -58,11 +59,13 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void SearchWalkPoint(){
+        Debug.Log("Patroling");
         //Calculate random point in range
         float randomZ = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
         float randomX = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
+        float randomY = Random.Range(-4f, 4f);
 
-        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
+        walkPoint = new Vector3(transform.position.x + randomX, randomY, transform.position.z + randomZ);
 
         if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround)){
             walkPointSet = true;

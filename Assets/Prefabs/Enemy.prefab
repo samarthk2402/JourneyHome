@@ -639,7 +639,7 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  gun: {fileID: 0}
+  gun: {fileID: 7071941299037827609}
   walkPoint: {x: 0, y: 0, z: 0}
   playerInSightRange: 0
   playerInAttackRange: 0
