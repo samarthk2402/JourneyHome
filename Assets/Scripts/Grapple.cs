@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class Grapple : MonoBehaviour
 {
     [SerializeField] float cooldown;
+    [SerializeField] float maxRange;
     private float cooldownTimer = 0f;
     private const float NORM_FOV = 60f;
     private const float HOOKSHOT_FOV = 100f;
@@ -48,7 +49,7 @@ public class Grapple : MonoBehaviour
 
         if(grappleInput>0)
         {
-            if(Physics.Raycast(cam.position, cam.forward, out RaycastHit hit))
+            if(Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, maxRange))
             {
                 if (cooldownTimer<=0 && canGrapple){
                     hookshot.transform.localScale = Vector3.zero;

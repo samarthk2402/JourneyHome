@@ -56,10 +56,14 @@ public class EnemyAI : MonoBehaviour
         if(distToWalkPoint.magnitude < 1){
             walkPointSet = false;
         }
+
+        //Obstacle found
+        if(Physics.Raycast(transform.position, transform.forward, 1.5f)){
+            walkPointSet = false;
+        }
     }
 
     private void SearchWalkPoint(){
-        Debug.Log("Patroling");
         //Calculate random point in range
         float randomZ = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
         float randomX = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
