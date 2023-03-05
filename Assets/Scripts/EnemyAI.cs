@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class EnemyAI : MonoBehaviour
     public bool playerInSightRange, playerInAttackRange;
 
     private Animator animator;
+    private Rig rig;
+    [SerializeField] List<Transform> effectTransforms = new List<Transform>();
 
     private void Awake(){
         player = GameObject.Find("Player");
@@ -33,6 +36,7 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = enemy.speed;
         animator = GetComponentInChildren<Animator>();
+        rig = GetComponentInChildren<Rig>();
     }
 
     private void Update(){
@@ -46,6 +50,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void Patroling(){
+        rig.weight = 0;
         animator.SetBool("isMoving", true);
         if(!walkPointSet) SearchWalkPoint();
 
@@ -80,11 +85,13 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void Chasing(){
+        rig.weight = 0;
         animator.SetBool("isMoving", true);
         agent.SetDestination(player.transform.position);
     }
 
     private void Attacking(){
+        rig.weight = 1;
         //Make sure enemy doesn't move
         animator.SetBool("isMoving", false);
         agent.SetDestination(transform.position);
@@ -104,11 +111,13 @@ public class EnemyAI : MonoBehaviour
             }
 
             if(enemy.lineRenderer != null){
-                    Vector3 endPoint = new Vector3(0, 0, enemy.attackRange);
-                    LineRenderer lr = Instantiate(enemy.lineRenderer, new Vector3(0, 0, 1), transform.rotation, transform);
-                    lr.transform.localPosition = new Vector3(0, 0, 1);
-                    lr.SetPosition(1, lr.transform.localPosition + endPoint);
+                foreach(Transform tran in effectTransforms){
+                    LineRenderer lr = Instantiate(enemy.lineRenderer, tran.position, transform.rotation, transform);
+                    lr.transform.position = tran.position;
+                    lr.SetPosition(1, tran.position);
                     StartCoroutine(DestroyAfterSeconds(enemy.psTime, lr.gameObject));
+                
+                }
             }
 
             if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, enemy.attackRange)){
