@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: GooEnemy
   m_EditorClassIdentifier: 
   walkPointRange: 10
-  speed: 3.5
+  speed: 1.5
   timeBetweenAttacks: 0
-  damage: 2
+  damage: 1
   sightRange: 8
-  attackRange: 5
+  attackRange: 8
   ps: {fileID: 0}
   psTime: 0.1
   lineRenderer: {fileID: 3722860134396904958, guid: 04456bfd92eba7942a5f627043dd0cf8, type: 3}

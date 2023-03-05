@@ -12,7 +12,7 @@ public class EnemyAI : MonoBehaviour
     private Player playerMove;
     public LayerMask whatIsGround, whatIsPlayer;
 
-    public GameObject gun;
+    public bool isShot = false;
 
     //Patrolling
     public Vector3 walkPoint;
@@ -24,13 +24,15 @@ public class EnemyAI : MonoBehaviour
     //States 
     public bool playerInSightRange, playerInAttackRange;
 
+    private Animator animator;
+
     private void Awake(){
         player = GameObject.Find("Player");
-        gun = transform.GetChild(1).gameObject;
         playerTarget = player.GetComponent<PlayerTarget>();
         playerMove = player.GetComponent<Player>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = enemy.speed;
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update(){
@@ -38,12 +40,13 @@ public class EnemyAI : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, enemy.sightRange, whatIsPlayer); 
         playerInAttackRange = Physics.CheckSphere(transform.position, enemy.attackRange, whatIsPlayer); 
 
-        if(!playerInSightRange && !playerInAttackRange) Patroling();
-        if(playerInSightRange && !playerInAttackRange) Chasing();
+        if(!playerInSightRange && !playerInAttackRange && !isShot) Patroling();
+        if((playerInSightRange && !playerInAttackRange) || isShot) Chasing();
         if(playerInAttackRange) Attacking();
     }
 
     private void Patroling(){
+        animator.SetBool("isMoving", true);
         if(!walkPointSet) SearchWalkPoint();
 
         if(walkPointSet){
@@ -58,7 +61,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         //Obstacle found
-        if(Physics.Raycast(transform.position, transform.forward, 1.5f)){
+        if(Physics.Raycast(transform.position, transform.forward, 1f)){
             walkPointSet = false;
         }
     }
@@ -77,11 +80,13 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void Chasing(){
+        animator.SetBool("isMoving", true);
         agent.SetDestination(player.transform.position);
     }
 
     private void Attacking(){
         //Make sure enemy doesn't move
+        animator.SetBool("isMoving", false);
         agent.SetDestination(transform.position);
         var lookPos = player.transform.position;
         lookPos.y = transform.position.y;
@@ -92,7 +97,7 @@ public class EnemyAI : MonoBehaviour
             //Attack
             if(enemy.ps != null){
                 Vector3 particleOffset = new Vector3(0f, 0f, 0.1f);
-                ParticleSystem muzzleFlash = Instantiate(enemy.ps, gun.transform.position, transform.rotation, transform);
+                ParticleSystem muzzleFlash = Instantiate(enemy.ps, new Vector3(0, 0, 1), transform.rotation, transform);
                 muzzleFlash.transform.localPosition = new Vector3(0, 0, 1);
                 muzzleFlash.Play();
                 StartCoroutine(DestroyAfterSeconds(enemy.psTime, muzzleFlash.gameObject));
@@ -100,7 +105,7 @@ public class EnemyAI : MonoBehaviour
 
             if(enemy.lineRenderer != null){
                     Vector3 endPoint = new Vector3(0, 0, enemy.attackRange);
-                    LineRenderer lr = Instantiate(enemy.lineRenderer, gun.transform.position, transform.rotation, transform);
+                    LineRenderer lr = Instantiate(enemy.lineRenderer, new Vector3(0, 0, 1), transform.rotation, transform);
                     lr.transform.localPosition = new Vector3(0, 0, 1);
                     lr.SetPosition(1, lr.transform.localPosition + endPoint);
                     StartCoroutine(DestroyAfterSeconds(enemy.psTime, lr.gameObject));
@@ -127,6 +132,7 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator resetAttack(){
         yield return new WaitForSeconds(enemy.timeBetweenAttacks);
         alreadyAttacked = false;
+        isShot = false;
     }
 
     private IEnumerator DestroyAfterSeconds(float seconds, GameObject muzzleFlash){

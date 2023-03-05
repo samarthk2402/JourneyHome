@@ -13,9 +13,11 @@ public class Target : MonoBehaviour
     public GameObject canvas;
     private IEnumerator showHp;
     private bool isShowingHP = false;
+    private EnemyAI aiScript;
 
     void Start()
     {
+        aiScript = GetComponent<EnemyAI>();
         canvas.SetActive(false);
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -23,6 +25,7 @@ public class Target : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        aiScript.isShot = true;
         currentHealth -= damage;
         if(isShowingHP){
             StopCoroutine(showHp);
