@@ -13,7 +13,6 @@ public class DamageOnCollision : MonoBehaviour
         {
             if(isDot){
                 collision.gameObject.GetComponent<PlayerTarget>().TakeDamageOverTime(damage, 10);
-                Debug.Log("Hit");
             }else{
                 collision.gameObject.GetComponent<PlayerTarget>().TakeDamage(damage);
                 Destroy(this.gameObject);
@@ -24,6 +23,7 @@ public class DamageOnCollision : MonoBehaviour
             Destroy(this.gameObject);
 
         }
+        Debug.Log(collision.gameObject.name);
     }
     
 }

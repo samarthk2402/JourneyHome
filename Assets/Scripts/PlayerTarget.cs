@@ -20,6 +20,7 @@ public class PlayerTarget : MonoBehaviour
     IEnumerator showDamage;
     private float lastTakenDamage;
     private float timePassed;
+    private bool istakingDOT = false;
 
     void Start()
     {
@@ -68,13 +69,15 @@ public class PlayerTarget : MonoBehaviour
     }
 
     public IEnumerator TakeDamageOverTime(float damage, float hit_num){
+        istakingDOT = true;
         for(int i = 0; i < hit_num+1; i++){
-            if(currentHealth-damage<=0f){
+            if(currentHealth<=0f){
                 yield break;
             }
             TakeDamage(damage);
             yield return new WaitForSeconds(0.5f);
         }
+        istakingDOT = false;
     }
 
     private void Heal(){
@@ -85,6 +88,12 @@ public class PlayerTarget : MonoBehaviour
                 StartCoroutine(HealSpeedDelay());
             }
         //}
+    }
+
+    void OnTriggerStay(Collider collider){
+        if (!istakingDOT){
+            StartCoroutine(TakeDamageOverTime(20, 1));
+        }
     }
 
     // public IEnumerator TakeDamageOverTime(float damage, float hit_num){

@@ -128,4 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
+  hit_num: 0
+  isDot: 0
   puddle: {fileID: 4337399060816055634, guid: f261081b39d95b546a24aa2702f96cfb, type: 3}
