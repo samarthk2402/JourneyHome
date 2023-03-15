@@ -6,7 +6,16 @@ using UnityEngine.Animations.Rigging;
 
 public class EnemyAI : MonoBehaviour
 {
-    public EnemyType enemy;
+    public float walkPointRange;
+    public float speed;
+    public float timeBetweenAttacks;
+    public float damage = 10;
+    public float sightRange, attackRange;
+    public ParticleSystem ps;
+    public float psTime;
+    public LineRenderer lineRenderer;
+    public bool damageOverTime;
+    public int hit_num;
     public NavMeshAgent agent;
     public GameObject player;
     public PlayerTarget playerTarget;
@@ -34,15 +43,15 @@ public class EnemyAI : MonoBehaviour
         playerTarget = player.GetComponent<PlayerTarget>();
         playerMove = player.GetComponent<Player>();
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = enemy.speed;
+        agent.speed = speed;
         animator = GetComponentInChildren<Animator>();
         rig = GetComponentInChildren<Rig>();
     }
 
     private void Update(){
         //Check for sight and attack range
-        playerInSightRange = Physics.CheckSphere(transform.position, enemy.sightRange, whatIsPlayer); 
-        playerInAttackRange = Physics.CheckSphere(transform.position, enemy.attackRange, whatIsPlayer); 
+        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer); 
+        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer); 
 
         if(!playerInSightRange && !playerInAttackRange && !isShot) Patroling();
         if((playerInSightRange && !playerInAttackRange) || isShot) Chasing();
@@ -73,8 +82,8 @@ public class EnemyAI : MonoBehaviour
 
     private void SearchWalkPoint(){
         //Calculate random point in range
-        float randomZ = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
-        float randomX = Random.Range(-enemy.walkPointRange, enemy.walkPointRange);
+        float randomZ = Random.Range(walkPointRange, walkPointRange);
+        float randomX = Random.Range(walkPointRange, walkPointRange);
         float randomY = Random.Range(-4f, 4f);
 
         walkPoint = new Vector3(transform.position.x + randomX, randomY, transform.position.z + randomZ);
@@ -102,44 +111,29 @@ public class EnemyAI : MonoBehaviour
         if(!alreadyAttacked && playerMove.controller.isGrounded){
 
             //Attack
-            if(enemy.ps != null){
-                Vector3 particleOffset = new Vector3(0f, 0f, 0.1f);
-                ParticleSystem muzzleFlash = Instantiate(enemy.ps, new Vector3(0, 0, 1), transform.rotation, transform);
-                muzzleFlash.transform.localPosition = new Vector3(0, 0, 1);
-                muzzleFlash.Play();
-                StartCoroutine(DestroyAfterSeconds(enemy.psTime, muzzleFlash.gameObject));
-            }
+            GetComponent<SlimeAttack>().ThrowSlime(player.transform.position);
 
-            if(enemy.lineRenderer != null){
-                foreach(Transform tran in effectTransforms){
-                    LineRenderer lr = Instantiate(enemy.lineRenderer, tran.position, transform.rotation, transform);
-                    lr.transform.position = tran.position;
-                    lr.SetPosition(1, tran.position);
-                    StartCoroutine(DestroyAfterSeconds(enemy.psTime, lr.gameObject));
-                
-                }
-            }
+            // if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, attackRange)){
+            //     if(damageOverTime){
+            //         IEnumerator takedot =  playerTarget.TakeDamageOverTime(damage, hit_num);
+            //         StartCoroutine(takedot);
+            //         // if(playerTarget.currentHealth-enemy.damage<=0){
+            //         //     Destroy(playerTarget.gameObject);
+            //         // }
+            //     }else{
+            //         playerTarget.TakeDamage(damage);
+            //     }
 
-            if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, enemy.attackRange)){
-                if(enemy.damageOverTime){
-                    IEnumerator takedot =  playerTarget.TakeDamageOverTime(enemy.damage, enemy.hit_num);
-                    StartCoroutine(takedot);
-                    // if(playerTarget.currentHealth-enemy.damage<=0){
-                    //     Destroy(playerTarget.gameObject);
-                    // }
-                }else{
-                    playerTarget.TakeDamage(enemy.damage);
-                }
-
-                alreadyAttacked = true;
-            }
+            //     alreadyAttacked = true;
+            // }
+            alreadyAttacked = true;
 
             StartCoroutine(resetAttack());
         }
     }
 
     private IEnumerator resetAttack(){
-        yield return new WaitForSeconds(enemy.timeBetweenAttacks);
+        yield return new WaitForSeconds(timeBetweenAttacks);
         alreadyAttacked = false;
         isShot = false;
     }
