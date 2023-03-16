@@ -5140,6 +5140,7 @@ GameObject:
   - component: {fileID: 1520302594}
   - component: {fileID: 1520302595}
   - component: {fileID: 1520302596}
+  - component: {fileID: 1520302597}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -5177,6 +5178,8 @@ MonoBehaviour:
   normHeight: 2
   controller: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
+  momentum: {x: 0, y: 0, z: 0}
+  ySpeed: 0
   canSlide: 1
   state: 0
 --- !u!4 &1520302592
@@ -5257,8 +5260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf7bf4b002d93847a8f4623026a7f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 1
-  maxRange: 12
+  cooldown: 0
+  maxRange: 20
   cam: {fileID: 963194228}
   hookshot: {fileID: 1483298392}
   speedLines: {fileID: 1909446943}
@@ -5282,6 +5285,20 @@ MonoBehaviour:
   healDelay: 0.01
   healSpeed: 2
   waitToHealTime: 2
+--- !u!136 &1520302597
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520302590}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1534203229
 GameObject:
   m_ObjectHideFlags: 0

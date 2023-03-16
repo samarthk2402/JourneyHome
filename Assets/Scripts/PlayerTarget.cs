@@ -90,8 +90,8 @@ public class PlayerTarget : MonoBehaviour
         //}
     }
 
-    void OnTriggerStay(Collider collider){
-        if (!istakingDOT){
+    void OnTriggerStay(Collider col){
+        if (!istakingDOT && col.gameObject.layer==8){
             StartCoroutine(TakeDamageOverTime(20, 1));
         }
     }

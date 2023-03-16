@@ -11,19 +11,16 @@ public class DamageOnCollision : MonoBehaviour
     void OnCollisionEnter(Collision collision){
         if(collision.gameObject.layer == 6)
         {
-            if(isDot){
-                collision.gameObject.GetComponent<PlayerTarget>().TakeDamageOverTime(damage, 10);
-            }else{
-                collision.gameObject.GetComponent<PlayerTarget>().TakeDamage(damage);
-                Destroy(this.gameObject);
-            }   
-        }else if(collision.gameObject.layer == 3 && !isDot){
+            
+            collision.gameObject.GetComponent<PlayerTarget>().TakeDamage(damage);
+            Destroy(this.gameObject);
+               
+        }else if(collision.gameObject.layer == 3){
             ContactPoint cp = collision.GetContact(0);
             Instantiate(puddle, cp.point+new Vector3(0, 0, 0.3f), Quaternion.FromToRotation (Vector3.up, cp.normal));
             Destroy(this.gameObject);
 
         }
-        Debug.Log(collision.gameObject.name);
     }
     
 }

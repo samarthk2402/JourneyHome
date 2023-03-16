@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] float slideLength;
     [SerializeField] float slideCoolDown;
     [SerializeField] float mass;
-    [SerializeField] float jumpSpeed;
+    [SerializeField] public float jumpSpeed;
     [SerializeField] float crouchTime;
     [SerializeField] float crouchHeight;
     [SerializeField] float normHeight;
@@ -35,7 +35,8 @@ public class Player : MonoBehaviour
 
     public CharacterController controller;
     public Vector3 velocity;
-    float ySpeed;
+    public Vector3 momentum;
+    public float ySpeed;
     float speed;
     float deltaSpeed;
     float currHeight;
@@ -52,7 +53,7 @@ public class Player : MonoBehaviour
     public enum State{
         Normal,
         HookshotFlyingPlayer,
-        HookshotThrown
+        HookshotThrown,
     }
 
     void Awake()
@@ -279,6 +280,21 @@ public class Player : MonoBehaviour
 
         velocity.y = ySpeed;
 
+        velocity += momentum;
+
         controller.Move(velocity*speed*Time.deltaTime);
+
+        if(momentum.magnitude>=0){
+            //Dampen Momentum
+            float drag = 0.95f;
+            momentum -= momentum*drag*Time.deltaTime;
+            if(momentum.magnitude<0){
+                momentum = Vector3.zero;
+            }
+        }
+
+        if(controller.isGrounded){
+            momentum = Vector3.zero;
+        }
     }
 }

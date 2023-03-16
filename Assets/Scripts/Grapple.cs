@@ -26,6 +26,7 @@ public class Grapple : MonoBehaviour
 
     private bool canGrapple = true;
 
+
     void Awake() {
         player = GetComponent<Player>();
         playerInput = GetComponent<PlayerInput>();
@@ -85,26 +86,47 @@ public class Grapple : MonoBehaviour
         hookshot.transform.LookAt(hookshotPosition);
         var jumpInput = jumpAction.ReadValue<float>();
         Vector3 hookshotDir = (hookshotPosition - transform.position).normalized;
+        Vector3 hookshotDirWithCam = Vector3.Slerp(cam.forward, hookshotDir, 0.5f);
+
+        if (Vector3.Distance(transform.position, hookshotPosition)>maxRange){
+            hookshotDirWithCam = hookshotDir;
+        }else{
+            hookshotDirWithCam = Vector3.Slerp(cam.forward, hookshotDir, 0.1f);
+        }
+
+    
 
         float hookshotSpeedMin = 10f;
         float hookshotSpeedMax = 40f;
         float hookshotSpeed = Mathf.Clamp(Vector3.Distance(transform.position, hookshotPosition), hookshotSpeedMin, hookshotSpeedMax);
         float hookshotSpeedMultiplier = 2f;
-        player.controller.Move(hookshotDir*hookshotSpeed*hookshotSpeedMultiplier*Time.deltaTime);
+        player.controller.Move(hookshotDirWithCam*hookshotSpeed*hookshotSpeedMultiplier*Time.deltaTime);
 
         float reachedPos = 1f;
+        //Debug.Log( Vector3.Angle(cam.forward, hookshotDir));
         if (Vector3.Distance(transform.position, hookshotPosition) < reachedPos)
         {
-            player.state = Player.State.Normal;
-            hookshot.SetActive(false);
-            cameraFov.SetCameraFov(NORM_FOV);
-            speedLines.Stop();
-            cooldownTimer = cooldown;
-            canGrapple = false;
-            StartCoroutine(waitForKeyRelease());
+            StopGrapple(Player.State.Normal);
+        }
+
+        if (Vector3.Angle(cam.forward, hookshotDir)>120){
+            //player.ySpeed += player.jumpSpeed/20;
+            player.momentum = hookshotDirWithCam*(hookshotSpeed/8);
+            StopGrapple(Player.State.Normal);
+
         }
 
         
+    }
+
+    void StopGrapple(Player.State state){
+        player.state = state;
+        hookshot.SetActive(false);
+        cameraFov.SetCameraFov(NORM_FOV);
+        speedLines.Stop();
+        cooldownTimer = cooldown;
+        canGrapple = false;
+        StartCoroutine(waitForKeyRelease());    
     }
 
     IEnumerator waitForKeyRelease()
