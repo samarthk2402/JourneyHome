@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e64578f8c162ca841a860c32ffe9d5ba, type: 3}
-  m_Name: GooMag
+  m_Name: Laser
   m_EditorClassIdentifier: 
   maxAmmo: 30
   damage: 5

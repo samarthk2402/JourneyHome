@@ -10,6 +10,7 @@ public class PlayerTarget : MonoBehaviour
     public HealthBar healthBar;
     public GameObject canvas;
     public GameObject damagePanel;
+    private Player player;
 
     public float healDelay; 
     public float healSpeed;
@@ -29,6 +30,7 @@ public class PlayerTarget : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
         damagePanel.SetActive(false);
         canHeal = true;
+        player = GetComponent<Player>();
     }
 
     void Update(){
@@ -93,6 +95,7 @@ public class PlayerTarget : MonoBehaviour
     void OnTriggerStay(Collider col){
         if (!istakingDOT && col.gameObject.layer==8){
             StartCoroutine(TakeDamageOverTime(20, 1));
+            player.speed -= player.speed/1.5f;
         }
     }
 

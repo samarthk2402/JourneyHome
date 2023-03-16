@@ -37,8 +37,7 @@ public class Player : MonoBehaviour
     public Vector3 velocity;
     public Vector3 momentum;
     public float ySpeed;
-    float speed;
-    float deltaSpeed;
+    public float speed;
     float currHeight;
     float heightTarget;
     bool isCrouching => normHeight-currHeight > .1f;

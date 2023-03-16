@@ -17,6 +17,7 @@ public class Grapple : MonoBehaviour
     PlayerInput playerInput;
     InputAction grappleAction;
     InputAction jumpAction;
+    InputAction moveAction;
 
     private Vector3 hookshotPosition;
     private float hookshotSize;
@@ -33,6 +34,7 @@ public class Grapple : MonoBehaviour
         cameraFov = GetComponentInChildren<CameraFOV>();
         grappleAction = playerInput.actions["grapple"];
         jumpAction = playerInput.actions["jump"];
+        moveAction = playerInput.actions["move"];
         hookshot.SetActive(false);
         speedLines.Stop();
     }
@@ -85,8 +87,10 @@ public class Grapple : MonoBehaviour
         hookshot.transform.localScale = new Vector3(1, 1, hookshotSize);
         hookshot.transform.LookAt(hookshotPosition);
         var jumpInput = jumpAction.ReadValue<float>();
+        var moveInput = moveAction.ReadValue<Vector2>();
         Vector3 hookshotDir = (hookshotPosition - transform.position).normalized;
-        Vector3 hookshotDirWithCam = Vector3.Slerp(cam.forward, hookshotDir, 0.5f);
+        Vector3 hookshotDirWithInput = hookshotDir+new Vector3(moveInput.x, 0, moveInput.y);
+        Vector3 hookshotDirWithCam = Vector3.Slerp(cam.forward, hookshotDirWithInput, 0.5f);
 
         if (Vector3.Distance(transform.position, hookshotPosition)>maxRange){
             hookshotDirWithCam = hookshotDir;
