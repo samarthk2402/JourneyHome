@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Animations.Rigging;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -35,7 +34,6 @@ public class EnemyAI : MonoBehaviour
     public bool playerInSightRange, playerInAttackRange;
 
     private Animator animator;
-    private Rig rig;
     [SerializeField] List<Transform> effectTransforms = new List<Transform>();
 
     private void Awake(){
@@ -45,7 +43,6 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         animator = GetComponentInChildren<Animator>();
-        rig = GetComponentInChildren<Rig>();
     }
 
     private void Update(){
@@ -59,7 +56,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void Patroling(){
-        rig.weight = 0;
+        //rig.weight = 0;
         animator.SetBool("isMoving", true);
         if(!walkPointSet) SearchWalkPoint();
 
@@ -94,13 +91,13 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void Chasing(){
-        rig.weight = 0;
+        //rig.weight = 0;
         animator.SetBool("isMoving", true);
         agent.SetDestination(player.transform.position);
     }
 
     private void Attacking(){
-        rig.weight = 1;
+        //rig.weight = 1;
         //Make sure enemy doesn't move
         animator.SetBool("isMoving", false);
         agent.SetDestination(transform.position);
@@ -108,7 +105,7 @@ public class EnemyAI : MonoBehaviour
         lookPos.y = transform.position.y;
         transform.LookAt(lookPos);
 
-        if(!alreadyAttacked && playerMove.controller.isGrounded){
+        if(!alreadyAttacked){
 
             //Attack
             GetComponent<SlimeAttack>().ThrowSlime(player.transform.position);

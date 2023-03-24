@@ -398,8 +398,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slimeBall: {fileID: 87487770071439784, guid: d57959ff98866724eb326a7a213d587a, type: 3}
-  handPos: {fileID: 6975760068070369825}
+  lefthandPos: {fileID: 6975760068070369825}
+  righthandPos: {fileID: 6975760068122242993}
   throwForce: 6
+  leftArm: {fileID: 6975760068976506826}
+  rightArm: {fileID: 6975760069342668745}
 --- !u!1 &6975760068320046569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,7 +1026,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: b4d9505f72777814e9c765d9bdd5f5a3, type: 3}
+  - {fileID: 2100000, guid: 01ca21b529a03ff45adab433d83c8ad9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
