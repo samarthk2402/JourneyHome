@@ -9,11 +9,13 @@ public class SlimeAttack : MonoBehaviour
     [SerializeField] Transform lefthandPos;
     [SerializeField] Transform righthandPos;
     [SerializeField] float throwForce = 5f;
-    [SerializeField] float throwTime = 10000;
     [SerializeField] MultiAimConstraint leftArm;
     [SerializeField] MultiAimConstraint rightArm;
 
     private bool hasWaited = true;
+    private IEnumerator throwing;
+    private IEnumerator releasing;
+    private bool canStart = true;
 
 
     void Start(){
@@ -23,69 +25,58 @@ public class SlimeAttack : MonoBehaviour
 
     public void ThrowSlime(Vector3 playerPos){
 
-        // var hasThrown = false;
-
-        // for(float i=0; i<1 ; i+=0.02f){
-        //      leftArm.weight = i;
-        //      Debug.Log(leftArm.weight);
-        // }
-        // while(!hasThrown){
-        //     if(hasWaited){
-        //         leftArm.weight += 0.1f;
-        //         StartCoroutine(Wait());
-        //         Debug.Log(leftArm.weight);
-        //     }
-        
-
-        //     if (leftArm.weight>=0.5f){
-        //         hasThrown = true;
-        //     }
+        // if(canStart){
+        //     Throw(leftArm, playerPos, lefthandPos, -0.5f);
+        //     canStart = false;
         // }
 
-        StartCoroutine(IncreaseWeight());
-
-        if(hasWaited){
-            var sb = Instantiate(slimeBall, lefthandPos.position, Quaternion.identity);
-            sb.GetComponent<Rigidbody>().AddForce((playerPos+new Vector3(-0.5f, 5, 0)-transform.position)*throwForce, ForceMode.Impulse);
-            StartCoroutine(DecreaseWeight());
-        }
-        //Debug.Log(leftArm.weight);
-
-        // while(leftArm.weight>0){
-        //     elapsedTime += Time.deltaTime;
-        //     float pcComplete = elapsedTime / throwTime;
-        //     leftArm.weight = Mathf.Lerp(1, 0, pcComplete);
-        //     Debug.Log(leftArm.weight);
-        // }
-        
-        // for(float i=1; i>0 ; i-=0.02f){
-        //     leftArm.weight = i;
+        // if(canStart){
+        //     Throw(rightArm, playerPos, righthandPos, 0.5f);
+        //     canStart = false;
         // }
 
+        Throw(rightArm, playerPos, righthandPos, 0.5f);
+        Throw(leftArm, playerPos, lefthandPos, -0.5f);
 
     }
 
-    private IEnumerator IncreaseWeight(){
-        hasWaited = false;
-        while(leftArm.weight<1){
+    void Throw(MultiAimConstraint arm, Vector3 playerPos, Transform armPos, float offset){
+        StopCoroutine(DecreaseWeight(arm));
+        if(arm.weight<=0){
+            StartCoroutine(IncreaseWeight(arm));
+        }
 
-            leftArm.weight += 0.2f;
-            Debug.Log(leftArm.weight);
-            yield return new WaitForSeconds(0.1f);
+        if(hasWaited && arm.weight>=1){
+            var sb = Instantiate(slimeBall, armPos.position, Quaternion.identity);
+            sb.GetComponent<Rigidbody>().AddForce((playerPos+new Vector3(offset, 5, 0)-transform.position)*throwForce, ForceMode.Impulse);
+            StopCoroutine(IncreaseWeight(arm));
+            StartCoroutine(DecreaseWeight(arm));
+            //canStart = true;
+        }
+    }
+
+    private IEnumerator IncreaseWeight(MultiAimConstraint arm){
+        hasWaited = false;
+        while(arm.weight<1){
+            yield return new WaitForSeconds(0.05f);
+            arm.weight += 0.2f;
+            //Debug.Log(leftArm.weight);
 
         }
         hasWaited = true;
-        yield return null;
+        yield break;
+        // yield return null;
     } 
 
-    private IEnumerator DecreaseWeight(){
-        while(leftArm.weight>0){
-
-            leftArm.weight -= 0.2f;
-            Debug.Log(leftArm.weight);
-            yield return new WaitForSeconds(0.1f);
+    private IEnumerator DecreaseWeight(MultiAimConstraint arm){
+        while(arm.weight>0){
+            arm.weight -= 0.2f;
+            //Debug.Log(leftArm.weight);
+            yield return new WaitForSeconds(0.05f);
 
         }
-        yield return null;
+
+        yield break;
+        // yield return null;
     } 
 }
