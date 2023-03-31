@@ -13,9 +13,7 @@ public class SlimeAttack : MonoBehaviour
     [SerializeField] MultiAimConstraint rightArm;
 
     private bool hasWaited = true;
-    private IEnumerator throwing;
-    private IEnumerator releasing;
-    private bool canStart = true;
+    //private bool canStart = true;
 
 
     void Start(){
