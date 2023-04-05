@@ -16,6 +16,7 @@ public class EnemyAI : MonoBehaviour
     public bool damageOverTime;
     public int hit_num;
     public NavMeshAgent agent;
+    public string enemyType;
     public GameObject player;
     public PlayerTarget playerTarget;
     private Player playerMove;
@@ -57,7 +58,9 @@ public class EnemyAI : MonoBehaviour
 
     private void Patroling(){
         //rig.weight = 0;
-        animator.SetBool("isMoving", true);
+        if(animator.GetBool("isMoving")  == false){
+            animator.SetBool("isMoving", true);
+        }
         if(!walkPointSet) SearchWalkPoint();
 
         if(walkPointSet){
@@ -92,14 +95,18 @@ public class EnemyAI : MonoBehaviour
 
     private void Chasing(){
         //rig.weight = 0;
-        animator.SetBool("isMoving", true);
+        if(animator.GetBool("isMoving") == false){
+            animator.SetBool("isMoving", true);
+        }
         agent.SetDestination(player.transform.position);
     }
 
     private void Attacking(){
         //rig.weight = 1;
         //Make sure enemy doesn't move
-        animator.SetBool("isMoving", false);
+        if(animator.GetBool("isMoving") == true){
+            animator.SetBool("isMoving", false);
+        }
         agent.SetDestination(transform.position);
         var lookPos = player.transform.position;
         lookPos.y = transform.position.y;
@@ -108,7 +115,9 @@ public class EnemyAI : MonoBehaviour
         if(!alreadyAttacked){
 
             //Attack
-            GetComponent<SlimeAttack>().ThrowSlime(player.transform.position);
+            if(enemyType=="slime"){
+                GetComponent<SlimeAttack>().ThrowSlime(player.transform.position);
+            }
 
             // if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, attackRange)){
             //     if(damageOverTime){
