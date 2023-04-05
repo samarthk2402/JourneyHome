@@ -10,6 +10,7 @@ public class PlayerTarget : MonoBehaviour
     public HealthBar healthBar;
     public GameObject canvas;
     public GameObject damagePanel;
+    private Player player;
 
     public float healDelay; 
     public float healSpeed;
@@ -20,6 +21,7 @@ public class PlayerTarget : MonoBehaviour
     IEnumerator showDamage;
     private float lastTakenDamage;
     private float timePassed;
+    private bool istakingDOT = false;
 
     void Start()
     {
@@ -28,6 +30,7 @@ public class PlayerTarget : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
         damagePanel.SetActive(false);
         canHeal = true;
+        player = GetComponent<Player>();
     }
 
     void Update(){
@@ -68,13 +71,15 @@ public class PlayerTarget : MonoBehaviour
     }
 
     public IEnumerator TakeDamageOverTime(float damage, float hit_num){
+        istakingDOT = true;
         for(int i = 0; i < hit_num+1; i++){
-            if(currentHealth-damage<=0f){
+            if(currentHealth<=0f){
                 yield break;
             }
             TakeDamage(damage);
             yield return new WaitForSeconds(0.5f);
         }
+        istakingDOT = false;
     }
 
     private void Heal(){
@@ -85,6 +90,13 @@ public class PlayerTarget : MonoBehaviour
                 StartCoroutine(HealSpeedDelay());
             }
         //}
+    }
+
+    void OnTriggerStay(Collider col){
+        if (!istakingDOT && col.gameObject.layer==8){
+            StartCoroutine(TakeDamageOverTime(20, 1));
+            player.speed -= player.speed/1.5f;
+        }
     }
 
     // public IEnumerator TakeDamageOverTime(float damage, float hit_num){
