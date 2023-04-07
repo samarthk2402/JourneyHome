@@ -95,10 +95,27 @@ public class EnemyAI : MonoBehaviour
 
     private void Chasing(){
         //rig.weight = 0;
-        if(animator.GetBool("isMoving") == false){
-            animator.SetBool("isMoving", true);
-        }
-        agent.SetDestination(player.transform.position);
+
+        if(enemyType == "og"){
+            agent.SetDestination(transform.position);
+            //transform.LookAt(player.transform.position);
+            animator.SetBool("isMoving", false);
+
+            
+            GetComponent<OgScript>().StartTongue(player.transform.position);
+
+            // if(tongueSize > Vector3.Distance(transform.position, tonguePosition))
+            // {
+            //     cameraFov.SetCameraFov(HOOKSHOT_FOV);
+            //     speedLines.Play();
+            //     player.state = Player.State.HookshotFlyingPlayer;
+            // }
+        }else{
+            if(animator.GetBool("isMoving") == false){
+                animator.SetBool("isMoving", true);
+            }
+            agent.SetDestination(player.transform.position);
+        } 
     }
 
     private void Attacking(){
