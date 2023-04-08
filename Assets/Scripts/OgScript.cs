@@ -13,6 +13,8 @@ public class OgScript : MonoBehaviour
     public float cooldown = 10;
     public float timer;
     private Vector3 initTongueSize;
+    public GameObject tongueCol;
+    public Player player;
 
     public enum State{
         Normal,
@@ -21,6 +23,10 @@ public class OgScript : MonoBehaviour
     }
 
     public State state;
+
+    void Awake(){
+        player = GameObject.Find("Player").GetComponent<Player>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +42,7 @@ public class OgScript : MonoBehaviour
                 GetComponent<EnemyAI>().enabled = true;
                 timer -= Time.deltaTime;
             }
+            //player.state = Player.State.Normal;
 
             break;
         case State.ThrowingTongue:
@@ -45,6 +52,13 @@ public class OgScript : MonoBehaviour
             BringTongueBack();
             break;
         }
+
+
+        //tongueCol.transform.position = new Vector3(tongue.transform.position.x, tongue.transform.position.y, tongue.transform.position.z + tongue.transform.localScale.z/2);
+        //tongueCol.transform.position = new Vector3(tongue.transform.position.x, tongue.transform.position.y, tongue.transform.position.z);
+        tongueCol.transform.Rotate(tongue.transform.localRotation.x, tongue.transform.localRotation.y, tongue.transform.localRotation.z, Space.Self);
+        tongueCol.transform.localPosition = tongue.transform.localPosition + new Vector3(0, 0, tongue.transform.localScale.z);
+        //Debug.Log(player.state);
     }
 
     public void StartTongue(Vector3 playerpos){
@@ -86,6 +100,10 @@ public class OgScript : MonoBehaviour
         tongueSize -= throwSpeed * Time.deltaTime;
         tongue.transform.localScale = new Vector3(initTongueSize.x, initTongueSize.y, tongueSize);
 
+        if(tongueSize <= 4){
+            player.state = Player.State.Normal;
+        }
+
         if(tongueSize <= 0)
         {
             StopTongue();
@@ -94,12 +112,13 @@ public class OgScript : MonoBehaviour
 
     public void StopTongue(){
         GetComponent<EnemyAI>().enabled = true;
-        Debug.Log("Stopping grapple");
         tongue.transform.localScale = Vector3.zero;
         timer = cooldown;
         state = State.Normal;
         tongue.SetActive(false);
+
     }
+    
 
 
 

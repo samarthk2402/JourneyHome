@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
         Normal,
         HookshotFlyingPlayer,
         HookshotThrown,
+        Stunned,
     }
 
     void Awake()
@@ -101,6 +102,10 @@ public class Player : MonoBehaviour
         case State.HookshotFlyingPlayer:
             grapple.HandleHookMovement();
             HandleLook();
+            break;
+        case State.Stunned:
+            HandleLook();
+            controller.Move(velocity*Time.deltaTime);
             break;
         }
 
