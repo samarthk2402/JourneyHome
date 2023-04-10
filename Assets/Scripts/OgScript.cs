@@ -15,6 +15,7 @@ public class OgScript : MonoBehaviour
     private Vector3 initTongueSize;
     public GameObject tongueCol;
     public Player player;
+    public ParticleSystem ps;
 
     public enum State{
         Normal,
@@ -101,6 +102,7 @@ public class OgScript : MonoBehaviour
         tongue.transform.localScale = new Vector3(initTongueSize.x, initTongueSize.y, tongueSize);
 
         if(tongueSize <= 4){
+            player.velocity = Vector3.zero;
             player.state = Player.State.Normal;
         }
 
@@ -116,6 +118,16 @@ public class OgScript : MonoBehaviour
         timer = cooldown;
         state = State.Normal;
         tongue.SetActive(false);
+
+    }
+
+    public void ToxicGas(){
+        GameObject player = GameObject.Find("Player");
+        var lookPos = player.transform.position;
+        lookPos.y = transform.position.y;
+        transform.LookAt(lookPos);
+        ps.Play();
+        player.GetComponent<PlayerTarget>().TakeDamageOverTime(10, 5);
 
     }
     

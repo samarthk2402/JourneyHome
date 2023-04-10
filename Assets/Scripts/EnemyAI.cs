@@ -96,7 +96,7 @@ public class EnemyAI : MonoBehaviour
     private void Chasing(){
         //rig.weight = 0;
 
-        if(enemyType == "og"){
+        if(enemyType == "og" && playerInSightRange){
             agent.SetDestination(transform.position);
             //transform.LookAt(player.transform.position);
             animator.SetBool("isMoving", false);
@@ -134,7 +134,10 @@ public class EnemyAI : MonoBehaviour
             //Attack
             if(enemyType=="slime"){
                 GetComponent<SlimeAttack>().ThrowSlime(player.transform.position);
+            }else if(enemyType=="og"){
+                GetComponent<OgScript>().ToxicGas();
             }
+
 
             // if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, attackRange)){
             //     if(damageOverTime){
