@@ -15,10 +15,33 @@ public class SlimeAttack : MonoBehaviour
     private bool hasWaited = true;
     //private bool canStart = true;
 
+    void Awake(){
+        var player = GameObject.Find("Player");
+        var animator = GetComponentInChildren<Animator>();
+        var rigBuilder = GetComponentInChildren<RigBuilder>();
+        
+        animator.enabled = false;
 
-    void Start(){
         leftArm.weight = 0;
         rightArm.weight = 0;
+        Debug.Log(player.transform);
+        WeightedTransformArray sources = new WeightedTransformArray();
+        sources.Add(new WeightedTransform(player.transform, leftArm.weight));
+        leftArm.data.sourceObjects = sources;
+        rightArm.data.sourceObjects = sources;
+
+        rigBuilder.Build();
+        animator.enabled = true;
+    }
+
+
+    void Update(){
+        var player = GameObject.Find("Player");
+        Debug.Log(player.transform);
+        WeightedTransformArray sources = new WeightedTransformArray();
+        sources.Add(new WeightedTransform(player.transform, leftArm.weight));
+        leftArm.data.sourceObjects = sources;
+        rightArm.data.sourceObjects = sources;
     }
 
     public void ThrowSlime(Vector3 playerPos){

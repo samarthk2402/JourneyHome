@@ -127,7 +127,7 @@ public class OgScript : MonoBehaviour
         lookPos.y = transform.position.y;
         transform.LookAt(lookPos);
         ps.Play();
-        player.GetComponent<PlayerTarget>().TakeDamageOverTime(10, 5);
+        StartCoroutine(player.GetComponent<PlayerTarget>().TakeDamageOverTime(10, 5));
 
     }
     

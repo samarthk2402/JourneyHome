@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 094f4c5ff11f7114480a7cc31e428777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkPointRange: 10
+  walkPointRange: 20
   speed: 2
   timeBetweenAttacks: 0.5
   damage: 10

@@ -54,6 +54,8 @@ public class EnemyAI : MonoBehaviour
         if(!playerInSightRange && !playerInAttackRange && !isShot) Patroling();
         if((playerInSightRange && !playerInAttackRange) || isShot) Chasing();
         if(playerInAttackRange) Attacking();
+
+
     }
 
     private void Patroling(){
@@ -82,13 +84,15 @@ public class EnemyAI : MonoBehaviour
 
     private void SearchWalkPoint(){
         //Calculate random point in range
-        float randomZ = Random.Range(walkPointRange, walkPointRange);
-        float randomX = Random.Range(walkPointRange, walkPointRange);
+        float randomZ = Random.Range(-walkPointRange,walkPointRange);
+        float randomX = Random.Range(-walkPointRange, walkPointRange);
         float randomY = Random.Range(-4f, 4f);
 
-        walkPoint = new Vector3(transform.position.x + randomX, randomY, transform.position.z + randomZ);
+        
+        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y + randomY, transform.position.z + randomZ);
 
         if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround)){
+            Debug.Log("Walkpoint set!");
             walkPointSet = true;
         }
     }
